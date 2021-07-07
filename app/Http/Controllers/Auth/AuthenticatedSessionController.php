@@ -17,8 +17,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
-        // echo "HELLO RUFUS";
-        return view('auth.login');
+        return redirect()->intended('/');
     }
 
     /**
