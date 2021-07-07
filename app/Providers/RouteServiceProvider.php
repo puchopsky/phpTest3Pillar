@@ -50,7 +50,12 @@ class RouteServiceProvider extends ServiceProvider
             Route::prefix('api/users/')
                 ->middleware(['loginParamsMiddlewareValidator'])
                 ->namespace($this->namespace)
-                ->group(base_path('routes/login/LoginRoutes.php'));
+                ->group(base_path('routes/LoginRoutes.php'));
+
+            Route::prefix('api/images/')
+                ->middleware(['imageMangerParamsMiddlewareValidator'])
+                ->namespace($this->namespace)
+                ->group(base_path('routes/ImageManagerRoutes.php'));
         });
     }
 

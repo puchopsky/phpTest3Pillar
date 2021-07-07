@@ -21,4 +21,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
+Route::get('/image-hanlder', function () {
+    return view('imageManager');
+});
+
 require __DIR__.'/auth.php';

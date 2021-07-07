@@ -10,8 +10,16 @@ class ValidationRulesConstants
             'email' => 'required',
             'password' => 'required',
         ],
-        'delete'=> [],
-        'get'=> [],
+        'delete' => [],
+        'get' => [],
+    ];
+
+    public const IMAGE_MANAGER_RULES = [
+        'new' => [],
+        'get' => [],
+        'post' => [
+            'imagesToUpload' => 'required'
+        ],
     ];
 
 
