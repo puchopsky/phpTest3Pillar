@@ -9,7 +9,9 @@ class ValidationRulesConstants
         'new' => [
             'email' => 'required',
             'password' => 'required',
-        ]
+        ],
+        'delete'=> [],
+        'get'=> [],
     ];
 
 

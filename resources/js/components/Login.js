@@ -1,6 +1,5 @@
 import React from "react";
 import {
-    Card,
     Row,
     Container,
     Col,
@@ -9,8 +8,11 @@ import {
     InputGroup,
     FormControl,
 } from "react-bootstrap";
+import UserAuthHandler from "../../classes/UserAuthHandler";
 
 class Login extends React.Component {
+    userAuthHandler = new UserAuthHandler();
+
     handleChange = (event) => {
         this.setState({
             [event.target.name]: event.target.value,
@@ -26,11 +28,11 @@ class Login extends React.Component {
         };
 
         console.log("User Info ", user);
-        await this.loginHelper.loginUser(user);
+        await this.userAuthHandler.loginUser(user);
 
-        if (this.loginHelper.userLoggedIn === true) {
-            this.props.SetUserInfo(this.loginHelper.loggedUserInfo);
-            this.props.history.push("/catalogos/tiposdecarga");
+        if (this.userAuthHandler.userLoggedIn === true) {
+            console.log("User Logged correctly going for allowed images");
+            // window.location.href = "http://www.w3schools.com";
         }
     };
 
@@ -50,6 +52,7 @@ class Login extends React.Component {
                                     aria-describedby="basic-addon1"
                                     type="email"
                                     name="email"
+                                    onChange={this.handleChange}
                                 />
                             </InputGroup>
 
@@ -63,6 +66,7 @@ class Login extends React.Component {
                                     aria-describedby="basic-addon1"
                                     type="password"
                                     name="password"
+                                    onChange={this.handleChange}
                                 />
                             </InputGroup>
 

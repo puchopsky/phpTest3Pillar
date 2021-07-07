@@ -1,6 +1,6 @@
 <?php
 
-namespace App\AbstractClasses;
+namespace App\Classes;
 
 use App\Interfaces\ResponseDecoratorInterface;
 use App\Validation\RuleValidationSelector;
@@ -10,7 +10,7 @@ use Closure;
 use Illuminate\Support\Facades\Log;
 use \Illuminate\Contracts\Validation\Validator as ValidatorObject;
 
-abstract class MiddleWareValidator
+class MiddleWareValidator
 {
 
     /**
@@ -32,6 +32,7 @@ abstract class MiddleWareValidator
      * @var RuleValidationSelector|ValidatorObject $ruleValidationSelector
      */
     protected RuleValidationSelector|ValidatorObject $ruleValidationSelector;
+
     /**
      * @var Request
      */
@@ -49,18 +50,36 @@ abstract class MiddleWareValidator
     }
 
     /**
+     * Handle an incoming request.
+     *
      * @param Request $request
      * @param Closure $next
+     *
      * @return mixed
      */
-    public abstract function handle(Request $request, Closure $next): mixed;
+    public function handle(Request $request, Closure $next): mixed {
+        $this->request = $request;
+        Log::debug('____________MIDDLE WARE LOGIN INCOMMING ');
+        Log::info(json_encode($request->all()));
+        Log::debug('Reqquest Method ' . $request->method());
+        $this->verifyHttpRequestVerb();
+        if ($this->isAllowedToProceed) {
+            $this->validateIncomingRequestValues();
+
+            if ($this->ruleValidationSelector->fails()) {
+                Log::debug('We have Validation Error ' . $this->ruleValidationSelector->messages()->first());
+                return response()->json($this->generateDecoratedResponse());
+            }
+        }
+
+        return $next($request);
+    }
 
     public function verifyHttpRequestVerb()
     {
         switch ($this->request->method()) {
             case 'GET':
                 $this->operationToValidate = 'get';
-                $this->isAllowedToProceed = false;
                 break;
             case 'POST':
                 $this->operationToValidate = 'new';
@@ -84,7 +103,7 @@ abstract class MiddleWareValidator
         );
     }
 
-    public function generateDecoratoredResponse() :array
+    public function generateDecoratedResponse(): array
     {
         return $this->decorator->decorateErrorValidationResponse($this->ruleValidationSelector->messages()->first());
     }

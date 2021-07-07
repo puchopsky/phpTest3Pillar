@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\UserRePository;
 use App\ResponseDecorators\LoginControllerDecorator;
-use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,13 +18,17 @@ class LoginController extends Controller
     /** @var LoginControllerDecorator $responseDecorator */
     protected LoginControllerDecorator $responseDecorator;
 
+    /** @var UserRePository $userRepository */
+    protected UserRePository $userRepository;
+
     /**
      * AuthController constructor.
      * @param LoginControllerDecorator $responseDecorator
      */
-    public function __construct(LoginControllerDecorator $responseDecorator)
+    public function __construct(LoginControllerDecorator $responseDecorator, UserRePository $userRepository)
     {
         $this->responseDecorator = $responseDecorator;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -45,24 +48,29 @@ class LoginController extends Controller
         $incommingData = [
             'email' => $request->get('email'),
             'password' => $request->get('password'),
-            'status' => 'ACTIVO'
         ];
 
         Log::debug('____________LOGIN INCOMMING VALUES ');
         Log::debug(json_encode($incommingData));
-        return response()->json($this->responseDecorator->decorateLoggedInUserResponse());
-        /*if (Auth::attempt($incommingData)) {
+
+        if (Auth::attempt($incommingData)) {
             $user = Auth::user();
 
-            $tokenResult = $user->createToken(config('APP_NAME'));
-            $tokenResult->token->expires_at = Carbon::now()->addMinute(180);
-            $tokenResult->token->save();
+            Log::debug('____________User is allowed ');
+            Log::debug(json_encode($user));
 
-            return response()->json($this->authDecorator->decorateLoggedInUserResponse($user, $tokenResult));
+            Log::debug('____________Request ');
+
+            $token = $request->user()->createToken('apiToken')->plainTextToken;
+
+            Log::debug('____________Generated Token  ');
+            Log::debug(json_encode($token));
+
+            return response()->json($this->responseDecorator->decorateLoggedInUserResponse($user, $token));
 
         } else {
             return response()->json('Unauthorized', 401);
-        }*/
+        }
     }
 
     /**
@@ -71,12 +79,9 @@ class LoginController extends Controller
      */
     public function logoutUser(Request $request)
     {
-        $request->user()->token()->revoke();
-
-        return response()->json([
-            'success' => true,
-            'message' => __('auth.logout_success')
-        ]);
+        Log::debug('User Log Out Request  ');
+        $request->user()->currentAccessToken()->delete();
+        return response()->json($this->responseDecorator->decorateLogOutResponse());
     }
 
     /**
@@ -85,10 +90,11 @@ class LoginController extends Controller
      */
     public function getUserInfo(Request $request)
     {
-        $tokenUserInfo = $request->user();
+        $incomingUser = $request->user();
 
-        $user = User::where('id', '=', $tokenUserInfo->id)->first();
+        Log::debug('User Info is  ');
+        Log::debug(json_encode($incomingUser));
 
-        return response()->json($this->responseDecorator->decorateGetUserInfo($user));
+        return response()->json($this->responseDecorator->decorateGetUserInfoResponse($incomingUser));
     }
 }

@@ -2,6 +2,6 @@
 use App\Http\Controllers\LoginController;
 
 Route::post('/login', [LoginController::class,'loginUser']);
-Route::post('/logout', 'LoginController@logoutUser');
-Route::middleware('auth:api')->get('/infoFromToken', 'LoginController@getUserInfo');
+Route::middleware('auth:sanctum')->delete('/logout', [LoginController::class,'logoutUser']);
+Route::middleware('auth:sanctum')->get('/userInfo', [LoginController::class,'getUserInfo']);
 
