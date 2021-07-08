@@ -1,5 +1,13 @@
 import React from "react";
-import { Row, Container, Col, Button, Form } from "react-bootstrap";
+import {
+    Row,
+    Container,
+    Col,
+    Button,
+    Form,
+    Spinner,
+    Alert,
+} from "react-bootstrap";
 import ImageManagerHandler from "../../classes/ImageManagerHandler";
 
 class ImageManager extends React.Component {
@@ -8,6 +16,8 @@ class ImageManager extends React.Component {
     state = {
         selectedImages: [],
         isUploading: false,
+        showErrorMessage: false,
+        showSuccessMessage: false,
     };
 
     handleImageSelection = (event) => {
@@ -19,6 +29,7 @@ class ImageManager extends React.Component {
     handleSubmit = async (event) => {
         event.preventDefault();
 
+        this.setState({ isUploading: true });
         const imagesFormData = new FormData();
         const temporalArrayImage = [];
         const selectedImages = this.state.selectedImages;
@@ -33,13 +44,24 @@ class ImageManager extends React.Component {
             console.log("FORM DATA VALUE", value);
         }
 
-        const response = await this.imageManger.uploadImages(imagesFormData);
+        await this.imageManger.uploadImages(imagesFormData);
 
+        const stateToChange = { isUploading: false };
+        if (this.imageManger.uploadedImages.length > 0) {
+            stateToChange.showSuccessMessage = true;
+        }
+
+        if (this.imageManger.faileUploadedImages.length > 0) {
+            stateToChange.showErrorMessage = true;
+        }
+        this.setState(stateToChange);
         console.log("Sucess array ", this.imageManger.uploadedImages);
         console.log("Failed array ", this.imageManger.faileUploadedImages);
     };
 
     render() {
+        const spinnerAmount = [...Array(5).keys()];
+        console.log("SPINNER ", spinnerAmount);
         return (
             <Container fluid>
                 <Row>
@@ -68,7 +90,45 @@ class ImageManager extends React.Component {
                         </Form>
                     </Col>
                 </Row>
-                <></>
+                {this.state.isUploading && (
+                    <Row className="pt-3">
+                        <Col xs lg="4">
+                            <label>Uploading</label>
+                        </Col>
+                        <Col xs lg="8">
+                            {spinnerAmount.map((number) => {
+                                return (
+                                    <Spinner
+                                        className="mr-2"
+                                        key={number}
+                                        animation="grow"
+                                        variant="primary"
+                                    />
+                                );
+                            })}
+                        </Col>
+                    </Row>
+                )}
+
+                {this.state.showErrorMessage && (
+                    <Row className="pt-3">
+                        <Col>
+                            <Alert variant="danger">
+                                Failed to upload the images
+                            </Alert>
+                        </Col>
+                    </Row>
+                )}
+
+                {this.state.showSuccessMessage && (
+                    <Row className="pt-3">
+                        <Col>
+                            <Alert variant="success">
+                                Images where uploaded correctly
+                            </Alert>
+                        </Col>
+                    </Row>
+                )}
             </Container>
         );
     }
