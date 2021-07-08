@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 
 import Login from "./Login";
-import ImageManger from "./ImageManger";
+import ImageManger from "./ImageManager";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 if (document.getElementById("appRoot")) {

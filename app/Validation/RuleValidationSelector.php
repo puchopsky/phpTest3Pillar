@@ -32,6 +32,9 @@ class RuleValidationSelector
             case 'login':
                 $constant = ValidationRulesConstants::LOGIN_PARAMS_RULES;
                 break;
+            case 'uploadImages':
+                $constant = ValidationRulesConstants::IMAGE_MANAGER_RULES;
+                break;
         }
 
         return $constant;

@@ -13,19 +13,16 @@ use \Illuminate\Contracts\Validation\Validator as ValidatorObject;
 class MiddleWareValidator
 {
 
-    /**
-     * @var ResponseDecoratorInterface $decorator
-     */
+    /** @var string $comesFrom */
+    protected string $comesFrom = 'login';
+
+    /** @var ResponseDecoratorInterface $decorator */
     protected ResponseDecoratorInterface $decorator;
 
-    /**
-     * @var string $operationToValidate
-     */
+    /** @var string $operationToValidate */
     protected string $operationToValidate = '';
 
-    /**
-     * @var bool $isAllowedToProceed
-     */
+    /** @var bool $isAllowedToProceed */
     protected bool $isAllowedToProceed = true;
 
     /**
@@ -96,7 +93,7 @@ class MiddleWareValidator
     public function validateIncomingRequestValues()
     {
         Log::debug("_____________ OPERTION TO VALIDATE {$this->operationToValidate}");
-        $foundRules = $this->ruleValidationSelector->getRules($this->operationToValidate, 'login');
+        $foundRules = $this->ruleValidationSelector->getRules($this->operationToValidate, $this->comesFrom);
         $this->ruleValidationSelector = Validator::make(
             $this->request->all(),
             $foundRules

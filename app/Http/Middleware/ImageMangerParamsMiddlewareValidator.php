@@ -20,5 +20,6 @@ class ImageMangerParamsMiddlewareValidator extends MiddleWareValidator
         ImageManagerControllerDecorator $decorator)
     {
         parent::__construct($ruleValidationSelector, $decorator);
+        $this->comesFrom = 'uploadImages';
     }
 }

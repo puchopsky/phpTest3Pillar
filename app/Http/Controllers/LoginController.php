@@ -38,13 +38,6 @@ class LoginController extends Controller
      */
     public function loginUser(Request $request): JsonResponse
     {
-        /* $rules = [
-            'email' => 'required|exists:users',
-            'password' => 'required'
-        ];
-
-        $request->validate($rules); */
-
         $incommingData = [
             'email' => $request->get('email'),
             'password' => $request->get('password'),

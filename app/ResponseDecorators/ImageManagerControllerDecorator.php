@@ -14,60 +14,48 @@ class ImageManagerControllerDecorator extends GenericResponsesDecorator
 {
 
     /**
-     * @param Authenticatable|null $user
-     * @param string $token
-     *
+     * @param array $imagesInfo
      * @return array
      */
-    public function decorateLoggedInUserResponse(Authenticatable $user = null, string $token = ''): array
+    public function decorateUploadImagesResponse(array $imagesInfo = []): array
     {
-        $responseArray = [];
+        $responseArray = [
+            'success' => true,
+            'imagesUploaded' => [],
+        ];
 
-        if (!empty($user)) {
-            $responseArray = [
-                'success' => true,
-                'foundUserInfo' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-
-                ],
-                'token_type' => 'Bearer',
-                'token' => $token
+        foreach ($imagesInfo as $imageInfo) {
+            $imageInfoObject = json_decode(json_encode($imageInfo), false);
+            $responseArray['imagesUploaded'][] = [
+                'imageName' => $imageInfoObject->imageName,
+                'imageUrl' => $imageInfoObject->imageUrl,
+                'imageExtension' => $imageInfoObject->imageExtension,
             ];
         }
+
         return $responseArray;
     }
 
     /**
-     * @param Authenticatable|null $user
-     * @param string $token
-     *
+     * @param array $imagesInfo
      * @return array
      */
-    public function decorateGetUserInfoResponse(Authenticatable $user = null): array
+    public function decorateNoPngUploadImagesResponse(array $failedImages = []): array
     {
-        $responseArray = [];
+        $responseArray = [
+            'success' => false,
+            'failedImages' => [],
+        ];
 
-        if (!empty($user)) {
-            $responseArray = [
-                'success' => true,
-                'foundUserInfo' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email,
-
-                ],
+        foreach ($failedImages as $failedImage) {
+            $failedImageObject = json_decode(json_encode($failedImage), false);
+            $responseArray['failedImages'][] = [
+                'imageName' => $failedImageObject->imageName,
+                'imageExtension' => $failedImageObject->imageExtension,
             ];
         }
+
         return $responseArray;
     }
 
-    public function decorateLogOutResponse(): array
-    {
-        return [
-            'success' => true,
-            'message' => 'Successfully logged out',
-        ];
-    }
 }
