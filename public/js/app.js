@@ -3862,6 +3862,129 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./resources/classes/ImageManagerHandler.js":
+/*!**************************************************!*\
+  !*** ./resources/classes/ImageManagerHandler.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _helpers_AxiosHelper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers/AxiosHelper */ "./resources/helpers/AxiosHelper.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+
+var ImageMangerHandler = /*#__PURE__*/function (_AxiosHelper) {
+  _inherits(ImageMangerHandler, _AxiosHelper);
+
+  var _super = _createSuper(ImageMangerHandler);
+
+  function ImageMangerHandler() {
+    var _this;
+
+    _classCallCheck(this, ImageMangerHandler);
+
+    _this = _super.call(this);
+
+    _defineProperty(_assertThisInitialized(_this), "uploadImages", /*#__PURE__*/function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(imagesToUpload) {
+        var urlApi, axiosResponse;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                urlApi = "".concat(_this.apiUrlGenerator, "images/upload");
+                console.log("Going to request the upload", imagesToUpload);
+                _context.prev = 2;
+                _context.next = 5;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default().post(urlApi, imagesToUpload, _this.headerFileUploadConfiguration);
+
+              case 5:
+                axiosResponse = _context.sent;
+
+                if (!axiosResponse) {
+                  _context.next = 10;
+                  break;
+                }
+
+                console.log("We have response from server ", axiosResponse.data);
+
+                if (axiosResponse.data.success === true) {
+                  _this.uploadedImages = axiosResponse.data.imagesUploaded;
+                } else {
+                  _this.faileUploadedImages = axiosResponse.data.failedImages;
+                }
+
+                return _context.abrupt("return", true);
+
+              case 10:
+                _context.next = 16;
+                break;
+
+              case 12:
+                _context.prev = 12;
+                _context.t0 = _context["catch"](2);
+                console.log("Failed to request the upload");
+                return _context.abrupt("return", false);
+
+              case 16:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[2, 12]]);
+      }));
+
+      return function (_x) {
+        return _ref.apply(this, arguments);
+      };
+    }());
+
+    _this.uploadedImages = {};
+    _this.faileUploadedImages = {};
+    return _this;
+  }
+
+  return ImageMangerHandler;
+}(_helpers_AxiosHelper__WEBPACK_IMPORTED_MODULE_1__.default);
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ImageMangerHandler);
+
+/***/ }),
+
 /***/ "./resources/classes/LolcalStorage.js":
 /*!********************************************!*\
   !*** ./resources/classes/LolcalStorage.js ***!
@@ -4230,10 +4353,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Col.js");
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
-/* harmony import */ var _classes_UserAuthHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../classes/UserAuthHandler */ "./resources/classes/UserAuthHandler.js");
+/* harmony import */ var _classes_ImageManagerHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../classes/ImageManagerHandler */ "./resources/classes/ImageManagerHandler.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -4281,34 +4410,61 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
 
     _this = _super.call.apply(_super, [this].concat(args));
 
-    _defineProperty(_assertThisInitialized(_this), "userAuthHandler", new _classes_UserAuthHandler__WEBPACK_IMPORTED_MODULE_2__.default());
+    _defineProperty(_assertThisInitialized(_this), "imageManger", new _classes_ImageManagerHandler__WEBPACK_IMPORTED_MODULE_2__.default());
 
-    _defineProperty(_assertThisInitialized(_this), "handleChange", function (event) {
-      _this.setState(_defineProperty({}, event.target.name, event.target.value));
+    _defineProperty(_assertThisInitialized(_this), "state", {
+      selectedImages: [],
+      isUploading: false
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "handleImageSelection", function (event) {
+      console.log("File Selection ");
+      console.log(event.target.files);
+
+      _this.setState({
+        selectedImages: event.target.files
+      });
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleSubmit", /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(event) {
-        var user;
+        var imagesFormData, temporalArrayImage, selectedImages, _iterator, _step, value, response;
+
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 event.preventDefault();
-                user = {
-                  email: _this.state.email,
-                  password: _this.state.password
-                };
-                console.log("User Info ", user);
-                _context.next = 5;
-                return _this.userAuthHandler.loginUser(user);
+                imagesFormData = new FormData();
+                temporalArrayImage = [];
+                selectedImages = _this.state.selectedImages;
+                console.log("Selected Images from State ", selectedImages);
+                Array.from(selectedImages).forEach(function (image) {
+                  temporalArrayImage.push(image);
+                  imagesFormData.append("imagesToUpload[]", image);
+                });
+                _iterator = _createForOfIteratorHelper(imagesFormData.values());
 
-              case 5:
-                if (_this.userAuthHandler.userLoggedIn === true) {
-                  console.log("User Logged correctly going for allowed images"); // window.location.href = "http://www.w3schools.com";
+                try {
+                  for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                    value = _step.value;
+                    console.log("FORM DATA VALUE", value);
+                  }
+                } catch (err) {
+                  _iterator.e(err);
+                } finally {
+                  _iterator.f();
                 }
 
-              case 6:
+                _context.next = 10;
+                return _this.imageManger.uploadImages(imagesFormData);
+
+              case 10:
+                response = _context.sent;
+                console.log("Sucess array ", _this.imageManger.uploadedImages);
+                console.log("Failed array ", _this.imageManger.faileUploadedImages);
+
+              case 13:
               case "end":
                 return _context.stop();
             }
@@ -4336,7 +4492,8 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
         label: "Select png image",
         multiple: true,
         className: "bg-gradient-theme-left border-0",
-        name: "imagesToUpload"
+        name: "imagesToUpload",
+        onChange: this.handleImageSelection
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__.default, {
         type: "submit",
         size: "lg",

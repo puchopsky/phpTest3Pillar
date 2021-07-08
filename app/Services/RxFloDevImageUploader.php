@@ -43,15 +43,24 @@ class RxFloDevImageUploader implements ImageUploaderHandler
                         'imageData' => $imageData,
                     ],
                 ]);
-            Log::debug('Response from API ');
-            Log::debug($responseFromApi->getBody());
+            Log::debug('**********Response from API ');
 
             $responseBody = json_decode($responseFromApi->getBody());
+
+            Log::debug(print_r($responseBody, true));
+
             if($responseBody->status === 'success') {
-                $image['imageUrl'] = $responseBody->url;
-                $uploadedImages[] = $image;
+                Log::debug('We have sucess response adding to array');
+                $uploadedImages[] = [
+                    'imageName' => $image['imageName'],
+                    'imageUrl' => $responseBody->url,
+                    'imageExtension' => $image['imageExtension'],
+                ];
             }
         }
+
+        Log::debug('Creatd array from APO RSP');
+        Log::debug(print_r($uploadedImages,true));
 
         return $uploadedImages;
     }

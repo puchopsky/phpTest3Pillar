@@ -56,7 +56,7 @@ class MiddleWareValidator
      */
     public function handle(Request $request, Closure $next): mixed {
         $this->request = $request;
-        Log::debug('____________MIDDLE WARE LOGIN INCOMMING ');
+        Log::debug('____________MIDDLE WARE INCOMING Values');
         Log::info(json_encode($request->all()));
         Log::debug('Reqquest Method ' . $request->method());
         $this->verifyHttpRequestVerb();

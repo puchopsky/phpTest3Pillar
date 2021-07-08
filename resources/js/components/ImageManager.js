@@ -1,39 +1,42 @@
 import React from "react";
-import {
-    Row,
-    Container,
-    Col,
-    Button,
-    Form,
-    InputGroup,
-    FormControl,
-} from "react-bootstrap";
-import UserAuthHandler from "../../classes/UserAuthHandler";
+import { Row, Container, Col, Button, Form } from "react-bootstrap";
+import ImageManagerHandler from "../../classes/ImageManagerHandler";
 
 class ImageManager extends React.Component {
-    userAuthHandler = new UserAuthHandler();
+    imageManger = new ImageManagerHandler();
 
-    handleChange = (event) => {
-        this.setState({
-            [event.target.name]: event.target.value,
-        });
+    state = {
+        selectedImages: [],
+        isUploading: false,
+    };
+
+    handleImageSelection = (event) => {
+        console.log("File Selection ");
+        console.log(event.target.files);
+        this.setState({ selectedImages: event.target.files });
     };
 
     handleSubmit = async (event) => {
         event.preventDefault();
 
-        const user = {
-            email: this.state.email,
-            password: this.state.password,
-        };
+        const imagesFormData = new FormData();
+        const temporalArrayImage = [];
+        const selectedImages = this.state.selectedImages;
+        console.log("Selected Images from State ", selectedImages);
 
-        console.log("User Info ", user);
-        await this.userAuthHandler.loginUser(user);
+        Array.from(selectedImages).forEach((image) => {
+            temporalArrayImage.push(image);
+            imagesFormData.append("imagesToUpload[]", image);
+        });
 
-        if (this.userAuthHandler.userLoggedIn === true) {
-            console.log("User Logged correctly going for allowed images");
-            // window.location.href = "http://www.w3schools.com";
+        for (var value of imagesFormData.values()) {
+            console.log("FORM DATA VALUE", value);
         }
+
+        const response = await this.imageManger.uploadImages(imagesFormData);
+
+        console.log("Sucess array ", this.imageManger.uploadedImages);
+        console.log("Failed array ", this.imageManger.faileUploadedImages);
     };
 
     render() {
@@ -49,6 +52,7 @@ class ImageManager extends React.Component {
                                     multiple
                                     className="bg-gradient-theme-left border-0"
                                     name="imagesToUpload"
+                                    onChange={this.handleImageSelection}
                                 />
                             </Form.Group>
 

@@ -4,28 +4,38 @@ import axios from "axios";
 class ImageMangerHandler extends AxiosHelper {
     constructor() {
         super();
-        this.userLoggedIn = false;
-        this.loggedUserInfo = {};
+        this.uploadedImages = {};
+        this.faileUploadedImages = {};
     }
 
-    getAllImages = async () => {
-        let urlApi = `${this.apiUrlGenerator}api/images`;
+    uploadImages = async (imagesToUpload) => {
+        const urlApi = `${this.apiUrlGenerator}images/upload`;
 
-        return await axios
-            .get(urlApi, this.headerConfiguration)
-            .then((response) => {
-                if (response.data.success === true) {
-                    this.loggedUserInfo = response.data.foundUserInfo;
-                    this.localStorage.saveValueToLocalStorage(
-                        "loggedUserInfo",
-                        JSON.stringify(this.loggedUserInfo)
-                    );
-                    return true;
+        console.log("Going to request the upload", imagesToUpload);
+
+        try {
+            const axiosResponse = await axios.post(
+                urlApi,
+                imagesToUpload,
+                this.headerFileUploadConfiguration
+            );
+
+            if (axiosResponse) {
+                console.log(
+                    "We have response from server ",
+                    axiosResponse.data
+                );
+                if (axiosResponse.data.success === true) {
+                    this.uploadedImages = axiosResponse.data.imagesUploaded;
+                } else {
+                    this.faileUploadedImages = axiosResponse.data.failedImages;
                 }
-            })
-            .catch((error) => {
-                return false;
-            });
+                return true;
+            }
+        } catch (error) {
+            console.log("Failed to request the upload");
+            return false;
+        }
     };
 }
 
