@@ -9,6 +9,7 @@ import {
     Alert,
 } from "react-bootstrap";
 import ImageManagerHandler from "../../classes/ImageManagerHandler";
+import { saferEvalNoReturn } from "alpinejs/src/utils";
 
 class ImageManager extends React.Component {
     imageManger = new ImageManagerHandler();
@@ -18,6 +19,8 @@ class ImageManager extends React.Component {
         isUploading: false,
         showErrorMessage: false,
         showSuccessMessage: false,
+        useDragNDrop: false,
+        showUploadForms: false,
     };
 
     handleImageSelection = (event) => {
@@ -59,6 +62,60 @@ class ImageManager extends React.Component {
         console.log("Failed array ", this.imageManger.faileUploadedImages);
     };
 
+    renderSuccessUpload = () => {
+        if (this.state.showSuccessMessage) {
+            return (
+                <Alert variant="success">Images where uploaded correctly</Alert>
+            );
+        }
+    };
+
+    renderFailedUpload = () => {
+        if (this.state.showErrorMessage) {
+            return <Alert variant="danger">Failed to upload the images</Alert>;
+        }
+    };
+
+    renderNormalForm = () => {
+        return (
+            <Form onSubmit={this.handleSubmit}>
+                <Form.Group>
+                    <Form.File
+                        accept=".png"
+                        label="Select png image"
+                        multiple
+                        className="bg-gradient-theme-left border-0"
+                        name="imagesToUpload"
+                        onChange={this.handleImageSelection}
+                    />
+                </Form.Group>
+
+                <Button
+                    type="submit"
+                    size="lg"
+                    className="bg-gradient-theme-left border-0"
+                    block
+                    onClick={this.handleSubmit}
+                >
+                    Upload
+                </Button>
+            </Form>
+        );
+    };
+
+    setFormToShow = (event) => {
+        const showForm = {
+            useDragNDrop: false,
+            showUploadForms: true,
+        };
+
+        if (event.target.name === "dragNDropForm") {
+            showForm.useDragNDrop = true;
+        }
+
+        this.setState(showForm);
+    };
+
     render() {
         const spinnerAmount = [...Array(5).keys()];
         console.log("SPINNER ", spinnerAmount);
@@ -66,28 +123,42 @@ class ImageManager extends React.Component {
             <Container fluid>
                 <Row>
                     <Col>
-                        <Form onSubmit={this.handleSubmit}>
-                            <Form.Group>
-                                <Form.File
-                                    accept=".png"
-                                    label="Select png image"
-                                    multiple
-                                    className="bg-gradient-theme-left border-0"
-                                    name="imagesToUpload"
-                                    onChange={this.handleImageSelection}
-                                />
-                            </Form.Group>
-
-                            <Button
-                                type="submit"
-                                size="lg"
-                                className="bg-gradient-theme-left border-0"
-                                block
-                                onClick={this.handleSubmit}
-                            >
-                                Upload
-                            </Button>
-                        </Form>
+                        <h3>Image Uploader</h3>
+                    </Col>
+                </Row>
+                <Row className="pb-3">
+                    <Col>
+                        <Button
+                            variant="primary"
+                            onClick={this.setFormToShow}
+                            name="normalForm"
+                        >
+                            With usual form
+                        </Button>
+                    </Col>
+                    <Col>
+                        <Button
+                            variant="primary"
+                            onClick={this.setFormToShow}
+                            name="dragNDropForm"
+                        >
+                            With drag N drop
+                        </Button>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        {!this.state.useDragNDrop &&
+                            this.state.showUploadForms &&
+                            this.renderNormalForm()}
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        {this.state.useDragNDrop &&
+                            this.state.showUploadForms && (
+                                <h5>DRAG AND DROP</h5>
+                            )}
                     </Col>
                 </Row>
                 {this.state.isUploading && (
@@ -110,25 +181,13 @@ class ImageManager extends React.Component {
                     </Row>
                 )}
 
-                {this.state.showErrorMessage && (
-                    <Row className="pt-3">
-                        <Col>
-                            <Alert variant="danger">
-                                Failed to upload the images
-                            </Alert>
-                        </Col>
-                    </Row>
-                )}
+                <Row className="pt-3">
+                    <Col>{this.renderFailedUpload()}</Col>
+                </Row>
 
-                {this.state.showSuccessMessage && (
-                    <Row className="pt-3">
-                        <Col>
-                            <Alert variant="success">
-                                Images where uploaded correctly
-                            </Alert>
-                        </Col>
-                    </Row>
-                )}
+                <Row className="pt-3">
+                    <Col>{this.renderSuccessUpload()}</Col>
+                </Row>
             </Container>
         );
     }
