@@ -19,15 +19,6 @@ class ImageManagerControllerDecorator extends GenericResponsesDecorator
      */
     public function decorateUploadImagesResponse(array $imagesInfo = []): array
     {
-        /*foreach ($imagesInfo as $imageInfo) {
-            $imageInfoObject = json_decode(json_encode($imageInfo), false);
-            $responseArray['imagesUploaded'][] = [
-                'imageName' => $imageInfoObject->imageName,
-                'imageUrl' => $imageInfoObject->imageUrl,
-                'imageExtension' => $imageInfoObject->imageExtension,
-            ];
-        }*/
-
         return [
             'success' => true,
             'imagesUploaded' => $imagesInfo,
@@ -42,6 +33,7 @@ class ImageManagerControllerDecorator extends GenericResponsesDecorator
     {
         $responseArray = [
             'success' => false,
+            'error' => 'Images with wrong extension ',
             'failedImages' => [],
         ];
 

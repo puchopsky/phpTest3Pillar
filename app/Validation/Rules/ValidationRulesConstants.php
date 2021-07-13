@@ -17,7 +17,9 @@ class ValidationRulesConstants
     public const IMAGE_MANAGER_RULES = [
         'get' => [],
         'new' => [
-            'imagesToUpload' => 'required'
+            'imagesToUpload' => 'required|filled',
+            'imagesToUpload.*' => 'image|mimes:png'
+
         ],
     ];
 

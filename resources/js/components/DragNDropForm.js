@@ -32,7 +32,13 @@ export function DragNDrop(props) {
     ));
 
     return (
-        <Form onSubmit={props.handleSubmit}>
+        <Form
+            onSubmit={(event) => {
+                props.handleSubmit(event);
+                acceptedFiles.length = 0;
+            }}
+            id="uploadForm"
+        >
             <Form.Group>
                 <Row>
                     <Col>

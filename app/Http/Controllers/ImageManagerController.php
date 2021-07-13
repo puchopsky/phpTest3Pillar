@@ -30,11 +30,6 @@ class ImageManagerController extends Controller
         Log::debug('Incoming Data To Upload');
         $imagesToUpload = $request->file('imagesToUpload');
 
-        if (empty($imagesToUpload)) {
-            return response()->json($this->responseDecorator
-                ->decorateErrorValidationResponse('No images to upload'));
-        }
-
 
         Log::debug('REquest Images ');
 

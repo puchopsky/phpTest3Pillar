@@ -4,23 +4,27 @@ import {
     Container,
     Col,
     Button,
-    Form,
     Spinner,
     Alert,
+    Image,
 } from "react-bootstrap";
 import ImageManagerHandler from "../../classes/ImageManagerHandler";
-import { DragNDrop } from "./dragNDropForm";
+import { DragNDrop } from "./DragNDropForm";
+import { NormalUploadForm } from "./NormalUploadForm";
 
 class ImageManager extends React.Component {
     imageManger = new ImageManagerHandler();
 
     state = {
         selectedImages: [],
+        uploadedImages: [],
         isUploading: false,
         showErrorMessage: false,
+        errorMessage: "There was an error while uploading the images",
         showSuccessMessage: false,
         useDragNDrop: false,
         showUploadForms: false,
+        disableUpload: true,
     };
 
     handleImageSelection = (event) => {
@@ -40,12 +44,10 @@ class ImageManager extends React.Component {
 
         this.setState({ isUploading: true });
         const imagesFormData = new FormData();
-        const temporalArrayImage = [];
         const selectedImages = this.state.selectedImages;
         console.log("Selected Images from State ", selectedImages);
 
         Array.from(selectedImages).forEach((image) => {
-            temporalArrayImage.push(image);
             imagesFormData.append("imagesToUpload[]", image);
         });
 
@@ -56,16 +58,19 @@ class ImageManager extends React.Component {
         await this.imageManger.uploadImages(imagesFormData);
 
         const stateToChange = { isUploading: false };
-        if (this.imageManger.uploadedImages.length > 0) {
+
+        if (this.imageManger.wasSucessfulRequest) {
             stateToChange.showSuccessMessage = true;
+            stateToChange.uploadedImages = this.imageManger.uploadedImages;
         }
 
-        if (this.imageManger.faileUploadedImages.length > 0) {
+        if (!this.imageManger.wasSucessfulRequest) {
             stateToChange.showErrorMessage = true;
+            stateToChange.errorMessage = this.imageManger.errorMessage;
         }
         this.setState(stateToChange);
-        console.log("Sucess array ", this.imageManger.uploadedImages);
-        console.log("Failed array ", this.imageManger.faileUploadedImages);
+
+        document.getElementById("uploadForm").reset();
     };
 
     renderSuccessUpload = () => {
@@ -78,41 +83,34 @@ class ImageManager extends React.Component {
 
     renderFailedUpload = () => {
         if (this.state.showErrorMessage) {
-            return <Alert variant="danger">Failed to upload the images</Alert>;
+            return (
+                <Alert variant="danger">
+                    Failed to upload the images {this.state.errorMessage}
+                </Alert>
+            );
         }
     };
 
-    renderNormalForm = () => {
-        return (
-            <Form onSubmit={this.handleSubmit}>
-                <Form.Group>
-                    <Form.File
-                        accept=".png"
-                        label="Select png image"
-                        multiple
-                        className="bg-gradient-theme-left border-0"
-                        name="imagesToUpload"
-                        onChange={this.handleImageSelection}
-                    />
-                </Form.Group>
+    removeItemFromList = (indexItem) => {
+        const uploadedImages = this.state.uploadedImages;
+        console.log("Incoming Index ", indexItem);
+        console.log("Images uploaded to delte ", uploadedImages);
 
-                <Button
-                    type="submit"
-                    size="lg"
-                    className="bg-gradient-theme-left border-0"
-                    block
-                    onClick={this.handleSubmit}
-                >
-                    Upload
-                </Button>
-            </Form>
-        );
+        uploadedImages.splice(indexItem, 1);
+        this.setState({ uploadedImages });
     };
 
     setFormToShow = (event) => {
         const showForm = {
             useDragNDrop: false,
             showUploadForms: true,
+            selectedImages: [],
+            uploadedImages: [],
+            isUploading: false,
+            showErrorMessage: false,
+            showSuccessMessage: false,
+            errorMessage: "There was an error while uploading the images",
+            disableUpload: true,
         };
 
         if (event.target.name === "dragNDropForm") {
@@ -155,8 +153,14 @@ class ImageManager extends React.Component {
                 <Row>
                     <Col>
                         {!this.state.useDragNDrop &&
-                            this.state.showUploadForms &&
-                            this.renderNormalForm()}
+                            this.state.showUploadForms && (
+                                <NormalUploadForm
+                                    handleSubmit={this.handleSubmit}
+                                    handleImageSelection={
+                                        this.handleImageSelection
+                                    }
+                                />
+                            )}
                     </Col>
                 </Row>
                 <Row>
@@ -198,6 +202,47 @@ class ImageManager extends React.Component {
 
                 <Row className="pt-3">
                     <Col>{this.renderSuccessUpload()}</Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        {this.state.uploadedImages && (
+                            <Container>
+                                {this.state.uploadedImages.map(
+                                    (imageUploaded, index) => (
+                                        <Row key={index}>
+                                            <Col
+                                                key={imageUploaded.imageName}
+                                                xs
+                                                lg={6}
+                                                className="pb-3"
+                                            >
+                                                <Image
+                                                    src={imageUploaded.imageUrl}
+                                                    alt={
+                                                        imageUploaded.imageName
+                                                    }
+                                                    thumbnail
+                                                />
+                                            </Col>
+                                            <Col>
+                                                <Button
+                                                    type="button"
+                                                    onClick={(index) => {
+                                                        this.removeItemFromList(
+                                                            index
+                                                        );
+                                                    }}
+                                                >
+                                                    Delete image
+                                                </Button>
+                                            </Col>
+                                        </Row>
+                                    )
+                                )}
+                            </Container>
+                        )}
+                    </Col>
                 </Row>
             </Container>
         );

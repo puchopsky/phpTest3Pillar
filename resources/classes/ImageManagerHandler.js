@@ -6,6 +6,8 @@ class ImageMangerHandler extends AxiosHelper {
         super();
         this.uploadedImages = {};
         this.faileUploadedImages = {};
+        this.errorMessage = "";
+        this.wasSucessfulRequest = false;
     }
 
     uploadImages = async (imagesToUpload) => {
@@ -26,8 +28,10 @@ class ImageMangerHandler extends AxiosHelper {
                     axiosResponse.data
                 );
                 if (axiosResponse.data.success === true) {
+                    this.wasSucessfulRequest = true;
                     this.uploadedImages = axiosResponse.data.imagesUploaded;
                 } else {
+                    this.errorMessage = axiosResponse.data.error;
                     this.faileUploadedImages = axiosResponse.data.failedImages;
                 }
                 return true;

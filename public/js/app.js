@@ -4081,8 +4081,10 @@ var ImageMangerHandler = /*#__PURE__*/function (_AxiosHelper) {
                 console.log("We have response from server ", axiosResponse.data);
 
                 if (axiosResponse.data.success === true) {
+                  _this.wasSucessfulRequest = true;
                   _this.uploadedImages = axiosResponse.data.imagesUploaded;
                 } else {
+                  _this.errorMessage = axiosResponse.data.error;
                   _this.faileUploadedImages = axiosResponse.data.failedImages;
                 }
 
@@ -4113,6 +4115,8 @@ var ImageMangerHandler = /*#__PURE__*/function (_AxiosHelper) {
 
     _this.uploadedImages = {};
     _this.faileUploadedImages = {};
+    _this.errorMessage = "";
+    _this.wasSucessfulRequest = false;
     return _this;
   }
 
@@ -4472,6 +4476,83 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
+/***/ "./resources/js/components/DragNDropForm.js":
+/*!**************************************************!*\
+  !*** ./resources/js/components/DragNDropForm.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "DragNDrop": () => (/* binding */ DragNDrop)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react_dropzone__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dropzone */ "./node_modules/react-dropzone/dist/es/index.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Row.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Col.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Alert.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
+
+
+
+function DragNDrop(props) {
+  var onDrop = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function (acceptedDroppedFiles) {
+    console.log("__________________ACELTES FILES", acceptedDroppedFiles);
+    props.handleImageSelectionDragNDrop(acceptedDroppedFiles);
+  }, []);
+
+  var _useDropzone = (0,react_dropzone__WEBPACK_IMPORTED_MODULE_1__.useDropzone)({
+    accept: "image/png",
+    onDrop: onDrop
+  }),
+      acceptedFiles = _useDropzone.acceptedFiles,
+      fileRejections = _useDropzone.fileRejections,
+      getRootProps = _useDropzone.getRootProps,
+      getInputProps = _useDropzone.getInputProps;
+
+  var acceptedFileItems = acceptedFiles.map(function (file) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", {
+      key: file.path
+    }, file.path, " - ", file.size, " bytes");
+  });
+  var fileRejectionItems = fileRejections.map(function (_ref) {
+    var file = _ref.file,
+        errors = _ref.errors;
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", {
+      key: file.path
+    }, file.path, " - ", file.size, " bytes", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, errors.map(function (e) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", {
+        key: e.code
+      }, e.message);
+    })));
+  });
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default, {
+    onSubmit: function onSubmit(event) {
+      props.handleSubmit(event);
+      acceptedFiles.length = 0;
+    },
+    id: "uploadForm"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Group, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("section", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", getRootProps({
+    className: "bg-light.bg-gradient border border-danger border-2 rounded"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", getInputProps()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Drag N drop some files here, or click to select files"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("em", null, "(Only*.png images will be accepted)")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("aside", {
+    className: "pt-3"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default, {
+    variant: "success"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", null, "To Upload"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, acceptedFileItems)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default, {
+    variant: "danger"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", null, "Rejected"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, fileRejectionItems)))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default, {
+    type: "submit",
+    size: "lg",
+    className: "bg-gradient-theme-left border-0",
+    block: true,
+    onClick: props.handleSubmit
+  }, "Upload")))));
+}
+
+/***/ }),
+
 /***/ "./resources/js/components/ImageManager.js":
 /*!*************************************************!*\
   !*** ./resources/js/components/ImageManager.js ***!
@@ -4486,15 +4567,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Alert.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Row.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Col.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Alert.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Row.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Col.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
 /* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Spinner.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Image.js");
 /* harmony import */ var _classes_ImageManagerHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../classes/ImageManagerHandler */ "./resources/classes/ImageManagerHandler.js");
-/* harmony import */ var _dragNDropForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./dragNDropForm */ "./resources/js/components/dragNDropForm.js");
+/* harmony import */ var _DragNDropForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./DragNDropForm */ "./resources/js/components/DragNDropForm.js");
+/* harmony import */ var _NormalUploadForm__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./NormalUploadForm */ "./resources/js/components/NormalUploadForm.js");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -4544,6 +4626,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 
+
 var ImageManager = /*#__PURE__*/function (_React$Component) {
   _inherits(ImageManager, _React$Component);
 
@@ -4564,11 +4647,14 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
 
     _defineProperty(_assertThisInitialized(_this), "state", {
       selectedImages: [],
+      uploadedImages: [],
       isUploading: false,
       showErrorMessage: false,
+      errorMessage: "There was an error while uploading the images",
       showSuccessMessage: false,
       useDragNDrop: false,
-      showUploadForms: false
+      showUploadForms: false,
+      disableUpload: true
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleImageSelection", function (event) {
@@ -4591,7 +4677,7 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
 
     _defineProperty(_assertThisInitialized(_this), "handleSubmit", /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(event) {
-        var imagesFormData, temporalArrayImage, selectedImages, _iterator, _step, value, stateToChange;
+        var imagesFormData, selectedImages, _iterator, _step, value, stateToChange;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
@@ -4604,11 +4690,9 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
                 });
 
                 imagesFormData = new FormData();
-                temporalArrayImage = [];
                 selectedImages = _this.state.selectedImages;
                 console.log("Selected Images from State ", selectedImages);
                 Array.from(selectedImages).forEach(function (image) {
-                  temporalArrayImage.push(image);
                   imagesFormData.append("imagesToUpload[]", image);
                 });
                 _iterator = _createForOfIteratorHelper(imagesFormData.values());
@@ -4624,28 +4708,29 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
                   _iterator.f();
                 }
 
-                _context.next = 11;
+                _context.next = 10;
                 return _this.imageManger.uploadImages(imagesFormData);
 
-              case 11:
+              case 10:
                 stateToChange = {
                   isUploading: false
                 };
 
-                if (_this.imageManger.uploadedImages.length > 0) {
+                if (_this.imageManger.wasSucessfulRequest) {
                   stateToChange.showSuccessMessage = true;
+                  stateToChange.uploadedImages = _this.imageManger.uploadedImages;
                 }
 
-                if (_this.imageManger.faileUploadedImages.length > 0) {
+                if (!_this.imageManger.wasSucessfulRequest) {
                   stateToChange.showErrorMessage = true;
+                  stateToChange.errorMessage = _this.imageManger.errorMessage;
                 }
 
                 _this.setState(stateToChange);
 
-                console.log("Sucess array ", _this.imageManger.uploadedImages);
-                console.log("Failed array ", _this.imageManger.faileUploadedImages);
+                document.getElementById("uploadForm").reset();
 
-              case 17:
+              case 15:
               case "end":
                 return _context.stop();
             }
@@ -4660,7 +4745,7 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
 
     _defineProperty(_assertThisInitialized(_this), "renderSuccessUpload", function () {
       if (_this.state.showSuccessMessage) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default, {
           variant: "success"
         }, "Images where uploaded correctly");
       }
@@ -4668,35 +4753,34 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
 
     _defineProperty(_assertThisInitialized(_this), "renderFailedUpload", function () {
       if (_this.state.showErrorMessage) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default, {
           variant: "danger"
-        }, "Failed to upload the images");
+        }, "Failed to upload the images ", _this.state.errorMessage);
       }
     });
 
-    _defineProperty(_assertThisInitialized(_this), "renderNormalForm", function () {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default, {
-        onSubmit: _this.handleSubmit
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default.Group, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default.File, {
-        accept: ".png",
-        label: "Select png image",
-        multiple: true,
-        className: "bg-gradient-theme-left border-0",
-        name: "imagesToUpload",
-        onChange: _this.handleImageSelection
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default, {
-        type: "submit",
-        size: "lg",
-        className: "bg-gradient-theme-left border-0",
-        block: true,
-        onClick: _this.handleSubmit
-      }, "Upload"));
+    _defineProperty(_assertThisInitialized(_this), "removeItemFromList", function (indexItem) {
+      var uploadedImages = _this.state.uploadedImages;
+      console.log("Incoming Index ", indexItem);
+      console.log("Images uploaded to delte ", uploadedImages);
+      uploadedImages.splice(indexItem, 1);
+
+      _this.setState({
+        uploadedImages: uploadedImages
+      });
     });
 
     _defineProperty(_assertThisInitialized(_this), "setFormToShow", function (event) {
       var showForm = {
         useDragNDrop: false,
-        showUploadForms: true
+        showUploadForms: true,
+        selectedImages: [],
+        uploadedImages: [],
+        isUploading: false,
+        showErrorMessage: false,
+        showSuccessMessage: false,
+        errorMessage: "There was an error while uploading the images",
+        disableUpload: true
       };
 
       if (event.target.name === "dragNDropForm") {
@@ -4712,36 +4796,41 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
   _createClass(ImageManager, [{
     key: "render",
     value: function render() {
+      var _this2 = this;
+
       var spinnerAmount = _toConsumableArray(Array(5).keys());
 
       console.log("SPINNER ", spinnerAmount);
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__.default, {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default, {
         fluid: true
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("h3", null, "Image Uploader"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("h3", null, "Image Uploader"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__.default, {
         className: "pb-3"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, {
         xs: true,
         lg: "6"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, {
         variant: "primary",
         onClick: this.setFormToShow,
         name: "normalForm"
-      }, "With usual form")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, {
+      }, "With usual form")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, {
         xs: true,
         lg: "6"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, {
         variant: "primary",
         onClick: this.setFormToShow,
         name: "dragNDropForm"
-      }, "With drag N drop"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, null, !this.state.useDragNDrop && this.state.showUploadForms && this.renderNormalForm())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, null, this.state.useDragNDrop && this.state.showUploadForms && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_dragNDropForm__WEBPACK_IMPORTED_MODULE_3__.DragNDrop, {
+      }, "With drag N drop"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, null, !this.state.useDragNDrop && this.state.showUploadForms && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_NormalUploadForm__WEBPACK_IMPORTED_MODULE_4__.NormalUploadForm, {
+        handleSubmit: this.handleSubmit,
+        handleImageSelection: this.handleImageSelection
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, null, this.state.useDragNDrop && this.state.showUploadForms && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(_DragNDropForm__WEBPACK_IMPORTED_MODULE_3__.DragNDrop, {
         handleImageSelectionDragNDrop: this.handleImageSelectionDragNDrop,
         handleSubmit: this.handleSubmit
-      }))), this.state.isUploading && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, {
+      }))), this.state.isUploading && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__.default, {
         className: "pt-3"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, {
         xs: true,
         lg: "4"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("label", null, "Uploading")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("label", null, "Uploading")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, {
         xs: true,
         lg: "8"
       }, spinnerAmount.map(function (number) {
@@ -4751,11 +4840,29 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
           animation: "grow",
           variant: "primary"
         });
-      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, {
+      }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__.default, {
         className: "pt-3"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, null, this.renderFailedUpload())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, null, this.renderFailedUpload())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__.default, {
         className: "pt-3"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, null, this.renderSuccessUpload())));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, null, this.renderSuccessUpload())), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, null, this.state.uploadedImages && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default, null, this.state.uploadedImages.map(function (imageUploaded, index) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__.default, {
+          key: index
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, {
+          key: imageUploaded.imageName,
+          xs: true,
+          lg: 6,
+          className: "pb-3"
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_11__.default, {
+          src: imageUploaded.imageUrl,
+          alt: imageUploaded.imageName,
+          thumbnail: true
+        })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, {
+          type: "button",
+          onClick: function onClick(index) {
+            _this2.removeItemFromList(index);
+          }
+        }, "Delete image")));
+      })))));
     }
   }]);
 
@@ -4956,75 +5063,40 @@ if (document.getElementById("imageManager")) {
 
 /***/ }),
 
-/***/ "./resources/js/components/dragNDropForm.js":
-/*!**************************************************!*\
-  !*** ./resources/js/components/dragNDropForm.js ***!
-  \**************************************************/
+/***/ "./resources/js/components/NormalUploadForm.js":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/NormalUploadForm.js ***!
+  \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "DragNDrop": () => (/* binding */ DragNDrop)
+/* harmony export */   "NormalUploadForm": () => (/* binding */ NormalUploadForm)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_dropzone__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dropzone */ "./node_modules/react-dropzone/dist/es/index.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Row.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Col.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Alert.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
 
 
-
-function DragNDrop(props) {
-  var onDrop = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function (acceptedDroppedFiles) {
-    console.log("__________________ACELTES FILES", acceptedDroppedFiles);
-    props.handleImageSelectionDragNDrop(acceptedDroppedFiles);
-  }, []);
-
-  var _useDropzone = (0,react_dropzone__WEBPACK_IMPORTED_MODULE_1__.useDropzone)({
-    accept: "image/png",
-    onDrop: onDrop
-  }),
-      acceptedFiles = _useDropzone.acceptedFiles,
-      fileRejections = _useDropzone.fileRejections,
-      getRootProps = _useDropzone.getRootProps,
-      getInputProps = _useDropzone.getInputProps;
-
-  var acceptedFileItems = acceptedFiles.map(function (file) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", {
-      key: file.path
-    }, file.path, " - ", file.size, " bytes");
-  });
-  var fileRejectionItems = fileRejections.map(function (_ref) {
-    var file = _ref.file,
-        errors = _ref.errors;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", {
-      key: file.path
-    }, file.path, " - ", file.size, " bytes", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, errors.map(function (e) {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("li", {
-        key: e.code
-      }, e.message);
-    })));
-  });
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default, {
-    onSubmit: props.handleSubmit
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default.Group, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("section", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", getRootProps({
-    className: "bg-light.bg-gradient border border-danger border-2 rounded"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", getInputProps()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Drag N drop some files here, or click to select files"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("em", null, "(Only*.png images will be accepted)")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("aside", {
-    className: "pt-3"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default, {
-    variant: "success"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", null, "To Upload"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, acceptedFileItems)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__.default, {
-    variant: "danger"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("label", null, "Rejected"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("ul", null, fileRejectionItems)))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__.default, {
+function NormalUploadForm(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default, {
+    onSubmit: props.handleSubmit,
+    id: "uploadForm"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default.Group, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_1__.default.File, {
+    accept: ".png",
+    label: "Select png image",
+    multiple: true,
+    className: "bg-gradient-theme-left border-0",
+    name: "imagesToUpload",
+    onChange: props.handleImageSelection
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__.default, {
     type: "submit",
     size: "lg",
     className: "bg-gradient-theme-left border-0",
     block: true,
     onClick: props.handleSubmit
-  }, "Upload")))));
+  }, "Upload"));
 }
 
 /***/ }),
@@ -43590,6 +43662,89 @@ function (_ref, ref) {
 });
 FormText.displayName = 'FormText';
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FormText);
+
+/***/ }),
+
+/***/ "./node_modules/react-bootstrap/esm/Image.js":
+/*!***************************************************!*\
+  !*** ./node_modules/react-bootstrap/esm/Image.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "propTypes": () => (/* binding */ propTypes),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/esm/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var _babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/esm/objectWithoutPropertiesLoose */ "./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+/* harmony import */ var prop_types__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(prop_types__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _ThemeProvider__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ThemeProvider */ "./node_modules/react-bootstrap/esm/ThemeProvider.js");
+
+
+var _excluded = ["bsPrefix", "className", "fluid", "rounded", "roundedCircle", "thumbnail"];
+
+
+
+
+var propTypes = {
+  /**
+   * @default 'img'
+   */
+  bsPrefix: (prop_types__WEBPACK_IMPORTED_MODULE_4___default().string),
+
+  /**
+   * Sets image as fluid image.
+   */
+  fluid: (prop_types__WEBPACK_IMPORTED_MODULE_4___default().bool),
+
+  /**
+   * Sets image shape as rounded.
+   */
+  rounded: (prop_types__WEBPACK_IMPORTED_MODULE_4___default().bool),
+
+  /**
+   * Sets image shape as circle.
+   */
+  roundedCircle: (prop_types__WEBPACK_IMPORTED_MODULE_4___default().bool),
+
+  /**
+   * Sets image shape as thumbnail.
+   */
+  thumbnail: (prop_types__WEBPACK_IMPORTED_MODULE_4___default().bool)
+};
+var defaultProps = {
+  fluid: false,
+  rounded: false,
+  roundedCircle: false,
+  thumbnail: false
+};
+var Image = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.forwardRef(function (_ref, ref) {
+  var bsPrefix = _ref.bsPrefix,
+      className = _ref.className,
+      fluid = _ref.fluid,
+      rounded = _ref.rounded,
+      roundedCircle = _ref.roundedCircle,
+      thumbnail = _ref.thumbnail,
+      props = (0,_babel_runtime_helpers_esm_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_1__.default)(_ref, _excluded);
+
+  bsPrefix = (0,_ThemeProvider__WEBPACK_IMPORTED_MODULE_5__.useBootstrapPrefix)(bsPrefix, 'img');
+  var classes = classnames__WEBPACK_IMPORTED_MODULE_2___default()(fluid && bsPrefix + "-fluid", rounded && "rounded", roundedCircle && "rounded-circle", thumbnail && bsPrefix + "-thumbnail");
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_3__.createElement("img", (0,_babel_runtime_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__.default)({
+    // eslint-disable-line jsx-a11y/alt-text
+    ref: ref
+  }, props, {
+    className: classnames__WEBPACK_IMPORTED_MODULE_2___default()(className, classes)
+  }));
+});
+Image.displayName = 'Image';
+Image.defaultProps = defaultProps;
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Image);
 
 /***/ }),
 
