@@ -9,7 +9,7 @@ import {
     Alert,
 } from "react-bootstrap";
 import ImageManagerHandler from "../../classes/ImageManagerHandler";
-import { saferEvalNoReturn } from "alpinejs/src/utils";
+import { DragNDrop } from "./dragNDropForm";
 
 class ImageManager extends React.Component {
     imageManger = new ImageManagerHandler();
@@ -27,6 +27,12 @@ class ImageManager extends React.Component {
         console.log("File Selection ");
         console.log(event.target.files);
         this.setState({ selectedImages: event.target.files });
+    };
+
+    handleImageSelectionDragNDrop = (acceptedFiles) => {
+        console.log("File Selection DRANG AND DROP");
+        console.log(acceptedFiles);
+        this.setState({ selectedImages: acceptedFiles });
     };
 
     handleSubmit = async (event) => {
@@ -127,7 +133,7 @@ class ImageManager extends React.Component {
                     </Col>
                 </Row>
                 <Row className="pb-3">
-                    <Col>
+                    <Col xs lg="6">
                         <Button
                             variant="primary"
                             onClick={this.setFormToShow}
@@ -136,7 +142,7 @@ class ImageManager extends React.Component {
                             With usual form
                         </Button>
                     </Col>
-                    <Col>
+                    <Col xs lg="6">
                         <Button
                             variant="primary"
                             onClick={this.setFormToShow}
@@ -157,7 +163,12 @@ class ImageManager extends React.Component {
                     <Col>
                         {this.state.useDragNDrop &&
                             this.state.showUploadForms && (
-                                <h5>DRAG AND DROP</h5>
+                                <DragNDrop
+                                    handleImageSelectionDragNDrop={
+                                        this.handleImageSelectionDragNDrop
+                                    }
+                                    handleSubmit={this.handleSubmit}
+                                />
                             )}
                     </Col>
                 </Row>

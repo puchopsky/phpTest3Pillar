@@ -30,6 +30,7 @@
         "tailwindcss": "^2.0.2"
     },
     "dependencies": {
-        "react-bootstrap": "^1.6.1"
+        "react-bootstrap": "^1.6.1",
+        "react-dropzone": "^11.3.4"
     }
 }
