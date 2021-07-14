@@ -1,4 +1,4 @@
-import LocalStorage from "../classes/LolcalStorage";
+import LocalStorage from "../classes/LocalStorage";
 import { API_URL } from "../config/apiUrl";
 
 class AxiosHelper {

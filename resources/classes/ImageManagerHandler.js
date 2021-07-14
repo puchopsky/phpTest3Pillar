@@ -1,4 +1,7 @@
 import AxiosHelper from "../helpers/AxiosHelper";
+import LocalStorage from "./LocalStorage";
+import HandleImageInLocalStorage from "./HandleImageInLocalStorage";
+
 import axios from "axios";
 
 class ImageMangerHandler extends AxiosHelper {
@@ -8,6 +11,9 @@ class ImageMangerHandler extends AxiosHelper {
         this.faileUploadedImages = {};
         this.errorMessage = "";
         this.wasSucessfulRequest = false;
+        this.imageLocalStorage = new HandleImageInLocalStorage(
+            new LocalStorage()
+        );
     }
 
     uploadImages = async (imagesToUpload) => {
@@ -30,6 +36,10 @@ class ImageMangerHandler extends AxiosHelper {
                 if (axiosResponse.data.success === true) {
                     this.wasSucessfulRequest = true;
                     this.uploadedImages = axiosResponse.data.imagesUploaded;
+
+                    this.imageLocalStorage.saveImagesToLocalStorage(
+                        this.uploadedImages
+                    );
                 } else {
                     this.errorMessage = axiosResponse.data.error;
                     this.faileUploadedImages = axiosResponse.data.failedImages;

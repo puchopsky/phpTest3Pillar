@@ -11,13 +11,17 @@ import {
 import ImageManagerHandler from "../../classes/ImageManagerHandler";
 import { DragNDrop } from "./DragNDropForm";
 import { NormalUploadForm } from "./NormalUploadForm";
+import HandleImageInLocalStorage from "../../classes/HandleImageInLocalStorage";
+import LocalStorage from "../../classes/LocalStorage";
 
 class ImageManager extends React.Component {
     imageManger = new ImageManagerHandler();
+    imageLocalStorage = new HandleImageInLocalStorage(new LocalStorage());
 
     state = {
         selectedImages: [],
         uploadedImages: [],
+        alreadyUploadedImages: [],
         isUploading: false,
         showErrorMessage: false,
         errorMessage: "There was an error while uploading the images",
@@ -26,6 +30,22 @@ class ImageManager extends React.Component {
         showUploadForms: false,
         disableUpload: true,
     };
+
+    componentDidMount() {
+        this.imageLocalStorage.getSavedImagesFromLocalStorage();
+
+        console.log(
+            "Conpmenten mount ",
+            this.imageLocalStorage.savedImagesInLocalStorage.length
+        );
+
+        if (this.imageLocalStorage.savedImagesInLocalStorage.length > 0) {
+            this.setState({
+                alreadyUploadedImages:
+                    this.imageLocalStorage.savedImagesInLocalStorage,
+            });
+        }
+    }
 
     handleImageSelection = (event) => {
         console.log("File Selection ");
@@ -47,7 +67,14 @@ class ImageManager extends React.Component {
         const selectedImages = this.state.selectedImages;
         console.log("Selected Images from State ", selectedImages);
 
-        Array.from(selectedImages).forEach((image) => {
+        const imagesAsArray = Array.from(selectedImages);
+
+        const filteredImagesToUpload =
+            this.imageLocalStorage.searchIfImageWasUploadedBefore(
+                imagesAsArray
+            );
+
+        filteredImagesToUpload.forEach((image) => {
             imagesFormData.append("imagesToUpload[]", image);
         });
 
@@ -61,13 +88,15 @@ class ImageManager extends React.Component {
 
         if (this.imageManger.wasSucessfulRequest) {
             stateToChange.showSuccessMessage = true;
-            stateToChange.uploadedImages = this.imageManger.uploadedImages;
-        }
+            this.imageLocalStorage.getSavedImagesFromLocalStorage();
 
-        if (!this.imageManger.wasSucessfulRequest) {
+            stateToChange.alreadyUploadedImages =
+                this.imageLocalStorage.savedImagesInLocalStorage;
+        } else {
             stateToChange.showErrorMessage = true;
             stateToChange.errorMessage = this.imageManger.errorMessage;
         }
+
         this.setState(stateToChange);
 
         document.getElementById("uploadForm").reset();
@@ -75,6 +104,9 @@ class ImageManager extends React.Component {
 
     renderSuccessUpload = () => {
         if (this.state.showSuccessMessage) {
+            setTimeout(() => {
+                this.setState({ showSuccessMessage: false });
+            }, 4000);
             return (
                 <Alert variant="success">Images where uploaded correctly</Alert>
             );
@@ -83,6 +115,9 @@ class ImageManager extends React.Component {
 
     renderFailedUpload = () => {
         if (this.state.showErrorMessage) {
+            setTimeout(() => {
+                this.setState({ showErrorMessage: false });
+            }, 4000);
             return (
                 <Alert variant="danger">
                     Failed to upload the images {this.state.errorMessage}
@@ -91,13 +126,14 @@ class ImageManager extends React.Component {
         }
     };
 
-    removeItemFromList = (indexItem) => {
-        const uploadedImages = this.state.uploadedImages;
-        console.log("Incoming Index ", indexItem);
-        console.log("Images uploaded to delte ", uploadedImages);
-
-        uploadedImages.splice(indexItem, 1);
-        this.setState({ uploadedImages });
+    removeItemFromList = (imageNameToDelete) => {
+        console.log("Incoming Index ", imageNameToDelete);
+        this.imageLocalStorage.removeItemFromLocalStorage(imageNameToDelete);
+        this.imageLocalStorage.getSavedImagesFromLocalStorage();
+        this.setState({
+            alreadyUploadedImages:
+                this.imageLocalStorage.savedImagesInLocalStorage,
+        });
     };
 
     setFormToShow = (event) => {
@@ -122,7 +158,7 @@ class ImageManager extends React.Component {
 
     render() {
         const spinnerAmount = [...Array(5).keys()];
-        console.log("SPINNER ", spinnerAmount);
+        console.log("STATE  ", this.state.alreadyUploadedImages);
         return (
             <Container fluid>
                 <Row>
@@ -206,9 +242,14 @@ class ImageManager extends React.Component {
 
                 <Row>
                     <Col>
-                        {this.state.uploadedImages && (
+                        {this.state.alreadyUploadedImages && (
                             <Container>
-                                {this.state.uploadedImages.map(
+                                <Row>
+                                    <Col>
+                                        <h5>Already Uploaded Images</h5>
+                                    </Col>
+                                </Row>
+                                {this.state.alreadyUploadedImages.map(
                                     (imageUploaded, index) => (
                                         <Row key={index}>
                                             <Col
@@ -230,7 +271,7 @@ class ImageManager extends React.Component {
                                                     type="button"
                                                     onClick={(index) => {
                                                         this.removeItemFromList(
-                                                            index
+                                                            imageUploaded.imageName
                                                         );
                                                     }}
                                                 >
