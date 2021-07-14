@@ -5,6 +5,12 @@ class HandleImageInLocalStorage {
         this.savedImagesInLocalStorage = [];
     }
 
+    /**
+     * To save the uploaded images into the local storage. If there are images in local storage then the new
+     * ones are adeed
+     *
+     * @param uploadedImages
+     */
     saveImagesToLocalStorage(uploadedImages) {
         const partialStorageArray = this.getPartialStorageArray();
 
@@ -19,80 +25,76 @@ class HandleImageInLocalStorage {
         );
     }
 
+    /**
+     * To search the images to upload in the images that already exists in the local storage. If the image
+     * exists in storage then it is removed from the images to upload
+     *
+     * @param imagesTotoUpload
+     * @returns {*}
+     */
     searchIfImageWasUploadedBefore(imagesTotoUpload) {
         this.getSavedImagesFromLocalStorage();
 
-        console.log("In Search with Local values ");
-
         const toUpLoad = imagesTotoUpload;
-        console.log("TO Filter images ", toUpLoad);
         toUpLoad.forEach((imageInfo, index) => {
-            console.log("Image info ", imageInfo);
             for (
                 let indexValue = 0;
                 indexValue < this.savedImagesInLocalStorage.length;
                 indexValue++
             ) {
-                console.log(
-                    "Saved Image Values ",
-                    this.savedImagesInLocalStorage[indexValue]
-                );
                 if (
                     this.savedImagesInLocalStorage[indexValue].imageName ===
                     imageInfo.name
                 ) {
-                    console.log("We have a repeated iage ", index);
                     imagesTotoUpload.splice(index, 1);
                     break;
                 }
             }
         });
 
-        console.log("Final Array to return ", imagesTotoUpload);
-
         return imagesTotoUpload;
     }
 
+    /**
+     * This gets from local storage an array of Json string objects for later conversion to json objects
+     *
+     * @returns {*[]|any}
+     */
     getPartialStorageArray() {
         const localStorageValue = this.localStorage.getValueForKey(
             this.storageKey
         );
 
-        console.log("Value of local ", localStorageValue);
         if (Object.keys(localStorageValue).length > 0) {
             return JSON.parse(localStorageValue);
         }
         return [];
     }
 
+    /**
+     * This returns all saved images in the local storage
+     */
     getSavedImagesFromLocalStorage() {
         this.savedImagesInLocalStorage = [];
-        console.log("Initial variable value ", this.savedImagesInLocalStorage);
 
         const partialStorageArray = this.getPartialStorageArray();
-
-        console.log("Value of local ", partialStorageArray);
 
         if (partialStorageArray.length > 0) {
             const finalArray = [];
             partialStorageArray.forEach((jsonImageInfo) => {
-                console.log("To convert ", jsonImageInfo);
                 const imageInfo = JSON.parse(jsonImageInfo);
-                console.log("Converted Item ", imageInfo);
                 finalArray.push(imageInfo);
             });
 
             this.savedImagesInLocalStorage = finalArray.reverse();
-
-            console.log(
-                "SavedImages in Storage ",
-                this.savedImagesInLocalStorage
-            );
         }
     }
 
+    /**
+     * To delete a selected images from the local storage
+     * @param imageNameToDelete
+     */
     removeItemFromLocalStorage(imageNameToDelete) {
-        console.log("INDX TO DELTE ", imageNameToDelete);
         this.getSavedImagesFromLocalStorage();
 
         for (
@@ -100,10 +102,6 @@ class HandleImageInLocalStorage {
             index < this.savedImagesInLocalStorage.length;
             index++
         ) {
-            console.log(
-                "Checking item ",
-                this.savedImagesInLocalStorage[index]
-            );
             if (
                 this.savedImagesInLocalStorage[index].imageName ===
                 imageNameToDelete
@@ -111,8 +109,6 @@ class HandleImageInLocalStorage {
                 this.savedImagesInLocalStorage.splice(index, 1);
             }
         }
-
-        console.log("After deleting the item ", this.savedImagesInLocalStorage);
 
         const newArrayToSave = [];
         this.savedImagesInLocalStorage.forEach((imageToConvert) => {

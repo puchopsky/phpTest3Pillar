@@ -34,11 +34,6 @@ class ImageManager extends React.Component {
     componentDidMount() {
         this.imageLocalStorage.getSavedImagesFromLocalStorage();
 
-        console.log(
-            "Conpmenten mount ",
-            this.imageLocalStorage.savedImagesInLocalStorage.length
-        );
-
         if (this.imageLocalStorage.savedImagesInLocalStorage.length > 0) {
             this.setState({
                 alreadyUploadedImages:
@@ -48,14 +43,10 @@ class ImageManager extends React.Component {
     }
 
     handleImageSelection = (event) => {
-        console.log("File Selection ");
-        console.log(event.target.files);
         this.setState({ selectedImages: event.target.files });
     };
 
     handleImageSelectionDragNDrop = (acceptedFiles) => {
-        console.log("File Selection DRANG AND DROP");
-        console.log(acceptedFiles);
         this.setState({ selectedImages: acceptedFiles });
     };
 
@@ -65,7 +56,6 @@ class ImageManager extends React.Component {
         this.setState({ isUploading: true });
         const imagesFormData = new FormData();
         const selectedImages = this.state.selectedImages;
-        console.log("Selected Images from State ", selectedImages);
 
         const imagesAsArray = Array.from(selectedImages);
 
@@ -77,10 +67,6 @@ class ImageManager extends React.Component {
         filteredImagesToUpload.forEach((image) => {
             imagesFormData.append("imagesToUpload[]", image);
         });
-
-        for (var value of imagesFormData.values()) {
-            console.log("FORM DATA VALUE", value);
-        }
 
         await this.imageManger.uploadImages(imagesFormData);
 
@@ -127,7 +113,6 @@ class ImageManager extends React.Component {
     };
 
     removeItemFromList = (imageNameToDelete) => {
-        console.log("Incoming Index ", imageNameToDelete);
         this.imageLocalStorage.removeItemFromLocalStorage(imageNameToDelete);
         this.imageLocalStorage.getSavedImagesFromLocalStorage();
         this.setState({
@@ -158,7 +143,6 @@ class ImageManager extends React.Component {
 
     render() {
         const spinnerAmount = [...Array(5).keys()];
-        console.log("STATE  ", this.state.alreadyUploadedImages);
         return (
             <Container fluid>
                 <Row>

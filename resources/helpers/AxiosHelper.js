@@ -6,7 +6,6 @@ class AxiosHelper {
         this.tokenBearer = "";
         this.headerConfiguration = null;
         this.headerFileUploadConfiguration = null;
-        this.is401Redirect = false;
         this.apiUrlGenerator = API_URL;
         this.localStorage = new LocalStorage();
         this.getTokenBearer();
@@ -35,12 +34,6 @@ class AxiosHelper {
 
     getTokenBearer = () => {
         this.tokenBearer = this.localStorage.getValueForKey("jwt");
-    };
-
-    check401Error = (error) => {
-        if (error.response.status === 401) {
-            this.is401Redirect = true;
-        }
     };
 }
 

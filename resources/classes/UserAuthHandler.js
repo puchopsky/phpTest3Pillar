@@ -8,69 +8,42 @@ class UserAuthHandler extends AxiosHelper {
         this.loggedUserInfo = {};
     }
 
+    /**
+     * To request login api call and save returned token to local storage
+     *
+     * @param userInfo
+     *
+     * @returns {Promise<boolean>}
+     */
     loginUser = async (userInfo) => {
         let urlApi = `${this.apiUrlGenerator}users/login`;
+        try {
+            const loginResponse = await axios.post(urlApi, userInfo);
 
-        return await axios
-            .post(urlApi, userInfo)
-            .then((response) => {
-                if (response.data.success === true) {
-                    this.loggedUserInfo = response.data.foundUserInfo;
+            if (loginResponse && loginResponse.data.success === true) {
+                this.loggedUserInfo = loginResponse.data.foundUserInfo;
 
-                    this.localStorage.saveValueToLocalStorage(
-                        "jwt",
-                        response.data.token
-                    );
-                    this.localStorage.saveValueToLocalStorage(
-                        "loggedUserInfo",
-                        JSON.stringify(this.loggedUserInfo)
-                    );
+                this.localStorage.saveValueToLocalStorage(
+                    "jwt",
+                    loginResponse.data.token
+                );
 
-                    this.userLoggedIn = true;
+                this.localStorage.saveValueToLocalStorage(
+                    "loggedUserInfo",
+                    JSON.stringify(this.loggedUserInfo)
+                );
 
-                    return true;
-                } else {
-                    this.checkLoginErrorMsg(response.data.message);
-                    return false;
-                }
-            })
-            .catch((error) => {
-                return false;
-            });
-    };
+                this.userLoggedIn = true;
 
-    getUserInfofromToken = async () => {
-        let urlApi = `${this.apiUrlGenerator}users/userInfo`;
-
-        return await axios
-            .get(urlApi, this.headerConfiguration)
-            .then((response) => {
-                console.log("RESPONSE FROM USER TOKEN ", response);
-                if (response.data.success === true) {
-                    this.loggedUserInfo = response.data.foundUserInfo;
-                    this.localStorage.saveValueToLocalStorage(
-                        "loggedUserInfo",
-                        JSON.stringify(this.loggedUserInfo)
-                    );
-                    return true;
-                }
-            })
-            .catch((error) => {
-                return false;
-            });
-    };
-
-    checkLoginErrorMsg = (message) => {
-        switch (message) {
-            case "Password Incorrect":
-                this.loginErrorMessage =
-                    "El email o la contraseña son incorrectos";
-                break;
-            case "User not found":
-                this.loginErrorMessage = "El usuario no existe";
-                break;
-            default:
-                this.loginErrorMessage = "Hubo un error desconocido";
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.log(
+                "There was an error while login the user ",
+                error.message
+            );
+            return false;
         }
     };
 }

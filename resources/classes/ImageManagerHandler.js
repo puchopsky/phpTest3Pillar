@@ -16,10 +16,15 @@ class ImageMangerHandler extends AxiosHelper {
         );
     }
 
+    /**
+     * To request the API call to upload the selected images
+     *
+     * @param imagesToUpload
+     *
+     * @returns {Promise<boolean>}
+     */
     uploadImages = async (imagesToUpload) => {
         const urlApi = `${this.apiUrlGenerator}images/upload`;
-
-        console.log("Going to request the upload", imagesToUpload);
 
         try {
             const axiosResponse = await axios.post(
@@ -29,10 +34,6 @@ class ImageMangerHandler extends AxiosHelper {
             );
 
             if (axiosResponse) {
-                console.log(
-                    "We have response from server ",
-                    axiosResponse.data
-                );
                 if (axiosResponse.data.success === true) {
                     this.wasSucessfulRequest = true;
                     this.uploadedImages = axiosResponse.data.imagesUploaded;
@@ -47,7 +48,7 @@ class ImageMangerHandler extends AxiosHelper {
                 return true;
             }
         } catch (error) {
-            console.log("Failed to request the upload");
+            console.log("Failed to request the upload", error.message);
             return false;
         }
     };

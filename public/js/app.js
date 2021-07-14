@@ -4025,6 +4025,13 @@ var HandleImageInLocalStorage = /*#__PURE__*/function () {
     this.storageKey = "uploadedImages";
     this.savedImagesInLocalStorage = [];
   }
+  /**
+   * To save the uploaded images into the local storage. If there are images in local storage then the new
+   * ones are adeed
+   *
+   * @param uploadedImages
+   */
+
 
   _createClass(HandleImageInLocalStorage, [{
     key: "saveImagesToLocalStorage",
@@ -4036,36 +4043,41 @@ var HandleImageInLocalStorage = /*#__PURE__*/function () {
       });
       this.localStorage.saveValueToLocalStorage(this.storageKey, JSON.stringify(partialStorageArray));
     }
+    /**
+     * To search the images to upload in the images that already exists in the local storage. If the image
+     * exists in storage then it is removed from the images to upload
+     *
+     * @param imagesTotoUpload
+     * @returns {*}
+     */
+
   }, {
     key: "searchIfImageWasUploadedBefore",
     value: function searchIfImageWasUploadedBefore(imagesTotoUpload) {
       var _this = this;
 
       this.getSavedImagesFromLocalStorage();
-      console.log("In Search with Local values ");
       var toUpLoad = imagesTotoUpload;
-      console.log("TO Filter images ", toUpLoad);
       toUpLoad.forEach(function (imageInfo, index) {
-        console.log("Image info ", imageInfo);
-
         for (var indexValue = 0; indexValue < _this.savedImagesInLocalStorage.length; indexValue++) {
-          console.log("Saved Image Values ", _this.savedImagesInLocalStorage[indexValue]);
-
           if (_this.savedImagesInLocalStorage[indexValue].imageName === imageInfo.name) {
-            console.log("We have a repeated iage ", index);
             imagesTotoUpload.splice(index, 1);
             break;
           }
         }
       });
-      console.log("Final Array to return ", imagesTotoUpload);
       return imagesTotoUpload;
     }
+    /**
+     * This gets from local storage an array of Json string objects for later conversion to json objects
+     *
+     * @returns {*[]|any}
+     */
+
   }, {
     key: "getPartialStorageArray",
     value: function getPartialStorageArray() {
       var localStorageValue = this.localStorage.getValueForKey(this.storageKey);
-      console.log("Value of local ", localStorageValue);
 
       if (Object.keys(localStorageValue).length > 0) {
         return JSON.parse(localStorageValue);
@@ -4073,41 +4085,41 @@ var HandleImageInLocalStorage = /*#__PURE__*/function () {
 
       return [];
     }
+    /**
+     * This returns all saved images in the local storage
+     */
+
   }, {
     key: "getSavedImagesFromLocalStorage",
     value: function getSavedImagesFromLocalStorage() {
       this.savedImagesInLocalStorage = [];
-      console.log("Initial variable value ", this.savedImagesInLocalStorage);
       var partialStorageArray = this.getPartialStorageArray();
-      console.log("Value of local ", partialStorageArray);
 
       if (partialStorageArray.length > 0) {
         var finalArray = [];
         partialStorageArray.forEach(function (jsonImageInfo) {
-          console.log("To convert ", jsonImageInfo);
           var imageInfo = JSON.parse(jsonImageInfo);
-          console.log("Converted Item ", imageInfo);
           finalArray.push(imageInfo);
         });
         this.savedImagesInLocalStorage = finalArray.reverse();
-        console.log("SavedImages in Storage ", this.savedImagesInLocalStorage);
       }
     }
+    /**
+     * To delete a selected images from the local storage
+     * @param imageNameToDelete
+     */
+
   }, {
     key: "removeItemFromLocalStorage",
     value: function removeItemFromLocalStorage(imageNameToDelete) {
-      console.log("INDX TO DELTE ", imageNameToDelete);
       this.getSavedImagesFromLocalStorage();
 
       for (var index = 0; index < this.savedImagesInLocalStorage.length; index++) {
-        console.log("Checking item ", this.savedImagesInLocalStorage[index]);
-
         if (this.savedImagesInLocalStorage[index].imageName === imageNameToDelete) {
           this.savedImagesInLocalStorage.splice(index, 1);
         }
       }
 
-      console.log("After deleting the item ", this.savedImagesInLocalStorage);
       var newArrayToSave = [];
       this.savedImagesInLocalStorage.forEach(function (imageToConvert) {
         var jsonToSave = JSON.stringify(Object.assign({}, imageToConvert));
@@ -4193,20 +4205,17 @@ var ImageMangerHandler = /*#__PURE__*/function (_AxiosHelper) {
             switch (_context.prev = _context.next) {
               case 0:
                 urlApi = "".concat(_this.apiUrlGenerator, "images/upload");
-                console.log("Going to request the upload", imagesToUpload);
-                _context.prev = 2;
-                _context.next = 5;
+                _context.prev = 1;
+                _context.next = 4;
                 return axios__WEBPACK_IMPORTED_MODULE_4___default().post(urlApi, imagesToUpload, _this.headerFileUploadConfiguration);
 
-              case 5:
+              case 4:
                 axiosResponse = _context.sent;
 
                 if (!axiosResponse) {
-                  _context.next = 10;
+                  _context.next = 8;
                   break;
                 }
-
-                console.log("We have response from server ", axiosResponse.data);
 
                 if (axiosResponse.data.success === true) {
                   _this.wasSucessfulRequest = true;
@@ -4220,22 +4229,22 @@ var ImageMangerHandler = /*#__PURE__*/function (_AxiosHelper) {
 
                 return _context.abrupt("return", true);
 
-              case 10:
-                _context.next = 16;
+              case 8:
+                _context.next = 14;
                 break;
 
-              case 12:
-                _context.prev = 12;
-                _context.t0 = _context["catch"](2);
-                console.log("Failed to request the upload");
+              case 10:
+                _context.prev = 10;
+                _context.t0 = _context["catch"](1);
+                console.log("Failed to request the upload", _context.t0.message);
                 return _context.abrupt("return", false);
 
-              case 16:
+              case 14:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[2, 12]]);
+        }, _callee, null, [[1, 10]]);
       }));
 
       return function (_x) {
@@ -4250,6 +4259,14 @@ var ImageMangerHandler = /*#__PURE__*/function (_AxiosHelper) {
     _this.imageLocalStorage = new _HandleImageInLocalStorage__WEBPACK_IMPORTED_MODULE_3__.default(new _LocalStorage__WEBPACK_IMPORTED_MODULE_2__.default());
     return _this;
   }
+  /**
+   * To request the API call to upload the selected images
+   *
+   * @param imagesToUpload
+   *
+   * @returns {Promise<boolean>}
+   */
+
 
   return ImageMangerHandler;
 }(_helpers_AxiosHelper__WEBPACK_IMPORTED_MODULE_1__.default);
@@ -4363,41 +4380,48 @@ var UserAuthHandler = /*#__PURE__*/function (_AxiosHelper) {
 
     _defineProperty(_assertThisInitialized(_this), "loginUser", /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(userInfo) {
-        var urlApi;
+        var urlApi, loginResponse;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 urlApi = "".concat(_this.apiUrlGenerator, "users/login");
-                _context.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_2___default().post(urlApi, userInfo).then(function (response) {
-                  if (response.data.success === true) {
-                    _this.loggedUserInfo = response.data.foundUserInfo;
-
-                    _this.localStorage.saveValueToLocalStorage("jwt", response.data.token);
-
-                    _this.localStorage.saveValueToLocalStorage("loggedUserInfo", JSON.stringify(_this.loggedUserInfo));
-
-                    _this.userLoggedIn = true;
-                    return true;
-                  } else {
-                    _this.checkLoginErrorMsg(response.data.message);
-
-                    return false;
-                  }
-                })["catch"](function (error) {
-                  return false;
-                });
-
-              case 3:
-                return _context.abrupt("return", _context.sent);
+                _context.prev = 1;
+                _context.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_2___default().post(urlApi, userInfo);
 
               case 4:
+                loginResponse = _context.sent;
+
+                if (!(loginResponse && loginResponse.data.success === true)) {
+                  _context.next = 11;
+                  break;
+                }
+
+                _this.loggedUserInfo = loginResponse.data.foundUserInfo;
+
+                _this.localStorage.saveValueToLocalStorage("jwt", loginResponse.data.token);
+
+                _this.localStorage.saveValueToLocalStorage("loggedUserInfo", JSON.stringify(_this.loggedUserInfo));
+
+                _this.userLoggedIn = true;
+                return _context.abrupt("return", true);
+
+              case 11:
+                return _context.abrupt("return", false);
+
+              case 14:
+                _context.prev = 14;
+                _context.t0 = _context["catch"](1);
+                console.log("There was an error while login the user ", _context.t0.message);
+                return _context.abrupt("return", false);
+
+              case 18:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee);
+        }, _callee, null, [[1, 14]]);
       }));
 
       return function (_x) {
@@ -4405,58 +4429,18 @@ var UserAuthHandler = /*#__PURE__*/function (_AxiosHelper) {
       };
     }());
 
-    _defineProperty(_assertThisInitialized(_this), "getUserInfofromToken", /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
-      var urlApi;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              urlApi = "".concat(_this.apiUrlGenerator, "users/userInfo");
-              _context2.next = 3;
-              return axios__WEBPACK_IMPORTED_MODULE_2___default().get(urlApi, _this.headerConfiguration).then(function (response) {
-                console.log("RESPONSE FROM USER TOKEN ", response);
-
-                if (response.data.success === true) {
-                  _this.loggedUserInfo = response.data.foundUserInfo;
-
-                  _this.localStorage.saveValueToLocalStorage("loggedUserInfo", JSON.stringify(_this.loggedUserInfo));
-
-                  return true;
-                }
-              })["catch"](function (error) {
-                return false;
-              });
-
-            case 3:
-              return _context2.abrupt("return", _context2.sent);
-
-            case 4:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2);
-    })));
-
-    _defineProperty(_assertThisInitialized(_this), "checkLoginErrorMsg", function (message) {
-      switch (message) {
-        case "Password Incorrect":
-          _this.loginErrorMessage = "El email o la contraseña son incorrectos";
-          break;
-
-        case "User not found":
-          _this.loginErrorMessage = "El usuario no existe";
-          break;
-
-        default:
-          _this.loginErrorMessage = "Hubo un error desconocido";
-      }
-    });
-
     _this.userLoggedIn = false;
     _this.loggedUserInfo = {};
     return _this;
   }
+  /**
+   * To request login api call and save returned token to local storage
+   *
+   * @param userInfo
+   *
+   * @returns {Promise<boolean>}
+   */
+
 
   return UserAuthHandler;
 }(_helpers_AxiosHelper__WEBPACK_IMPORTED_MODULE_1__.default);
@@ -4528,16 +4512,9 @@ var AxiosHelper = function AxiosHelper() {
     _this.tokenBearer = _this.localStorage.getValueForKey("jwt");
   });
 
-  _defineProperty(this, "check401Error", function (error) {
-    if (error.response.status === 401) {
-      _this.is401Redirect = true;
-    }
-  });
-
   this.tokenBearer = "";
   this.headerConfiguration = null;
   this.headerFileUploadConfiguration = null;
-  this.is401Redirect = false;
   this.apiUrlGenerator = _config_apiUrl__WEBPACK_IMPORTED_MODULE_1__.API_URL;
   this.localStorage = new _classes_LocalStorage__WEBPACK_IMPORTED_MODULE_0__.default();
   this.getTokenBearer();
@@ -4630,7 +4607,6 @@ __webpack_require__.r(__webpack_exports__);
 
 function DragNDrop(props) {
   var onDrop = react__WEBPACK_IMPORTED_MODULE_0__.useCallback(function (acceptedDroppedFiles) {
-    console.log("__________________ACELTES FILES", acceptedDroppedFiles);
     props.handleImageSelectionDragNDrop(acceptedDroppedFiles);
   }, []);
 
@@ -4716,17 +4692,15 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
-
-
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -4796,18 +4770,12 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleImageSelection", function (event) {
-      console.log("File Selection ");
-      console.log(event.target.files);
-
       _this.setState({
         selectedImages: event.target.files
       });
     });
 
     _defineProperty(_assertThisInitialized(_this), "handleImageSelectionDragNDrop", function (acceptedFiles) {
-      console.log("File Selection DRANG AND DROP");
-      console.log(acceptedFiles);
-
       _this.setState({
         selectedImages: acceptedFiles
       });
@@ -4815,8 +4783,7 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
 
     _defineProperty(_assertThisInitialized(_this), "handleSubmit", /*#__PURE__*/function () {
       var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee(event) {
-        var imagesFormData, selectedImages, imagesAsArray, filteredImagesToUpload, _iterator, _step, value, stateToChange;
-
+        var imagesFormData, selectedImages, imagesAsArray, filteredImagesToUpload, stateToChange;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -4829,29 +4796,15 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
 
                 imagesFormData = new FormData();
                 selectedImages = _this.state.selectedImages;
-                console.log("Selected Images from State ", selectedImages);
                 imagesAsArray = Array.from(selectedImages);
                 filteredImagesToUpload = _this.imageLocalStorage.searchIfImageWasUploadedBefore(imagesAsArray);
                 filteredImagesToUpload.forEach(function (image) {
                   imagesFormData.append("imagesToUpload[]", image);
                 });
-                _iterator = _createForOfIteratorHelper(imagesFormData.values());
-
-                try {
-                  for (_iterator.s(); !(_step = _iterator.n()).done;) {
-                    value = _step.value;
-                    console.log("FORM DATA VALUE", value);
-                  }
-                } catch (err) {
-                  _iterator.e(err);
-                } finally {
-                  _iterator.f();
-                }
-
-                _context.next = 12;
+                _context.next = 9;
                 return _this.imageManger.uploadImages(imagesFormData);
 
-              case 12:
+              case 9:
                 stateToChange = {
                   isUploading: false
                 };
@@ -4871,7 +4824,7 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
 
                 document.getElementById("uploadForm").reset();
 
-              case 16:
+              case 13:
               case "end":
                 return _context.stop();
             }
@@ -4911,8 +4864,6 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "removeItemFromList", function (imageNameToDelete) {
-      console.log("Incoming Index ", imageNameToDelete);
-
       _this.imageLocalStorage.removeItemFromLocalStorage(imageNameToDelete);
 
       _this.imageLocalStorage.getSavedImagesFromLocalStorage();
@@ -4949,7 +4900,6 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.imageLocalStorage.getSavedImagesFromLocalStorage();
-      console.log("Conpmenten mount ", this.imageLocalStorage.savedImagesInLocalStorage.length);
 
       if (this.imageLocalStorage.savedImagesInLocalStorage.length > 0) {
         this.setState({
@@ -4964,7 +4914,6 @@ var ImageManager = /*#__PURE__*/function (_React$Component) {
 
       var spinnerAmount = _toConsumableArray(Array(5).keys());
 
-      console.log("STATE  ", this.state.alreadyUploadedImages);
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__.default, {
         fluid: true
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_10__.default, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement("h3", null, "Image Uploader"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1__.createElement(react_bootstrap__WEBPACK_IMPORTED_MODULE_9__.default, {
@@ -5127,17 +5076,15 @@ var Login = /*#__PURE__*/function (_React$Component) {
                   email: _this.state.email,
                   password: _this.state.password
                 };
-                console.log("User Info ", user);
-                _context.next = 5;
+                _context.next = 4;
                 return _this.userAuthHandler.loginUser(user);
 
-              case 5:
+              case 4:
                 if (_this.userAuthHandler.userLoggedIn === true) {
-                  console.log("User Logged correctly going for allowed images");
                   window.location.href = "http://localhost/image-handler";
                 }
 
-              case 6:
+              case 5:
               case "end":
                 return _context.stop();
             }

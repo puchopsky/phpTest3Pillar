@@ -27,11 +27,9 @@ class Login extends React.Component {
             password: this.state.password,
         };
 
-        console.log("User Info ", user);
         await this.userAuthHandler.loginUser(user);
 
         if (this.userAuthHandler.userLoggedIn === true) {
-            console.log("User Logged correctly going for allowed images");
             window.location.href = "http://localhost/image-handler";
         }
     };

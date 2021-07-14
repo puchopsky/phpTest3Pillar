@@ -4,7 +4,6 @@ import { Button, Col, Row, Form, Alert } from "react-bootstrap";
 
 export function DragNDrop(props) {
     const onDrop = React.useCallback((acceptedDroppedFiles) => {
-        console.log("__________________ACELTES FILES", acceptedDroppedFiles);
         props.handleImageSelectionDragNDrop(acceptedDroppedFiles);
     }, []);
 
