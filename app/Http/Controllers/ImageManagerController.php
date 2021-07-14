@@ -17,6 +17,12 @@ class ImageManagerController extends Controller
     /** @var ImageManagerControllerDecorator $responseDecorator */
     protected ImageManagerControllerDecorator $responseDecorator;
 
+    /**
+     * ImageManagerController constructor
+     *
+     * @param ImageManagerControllerDecorator $imageManagerControllerDecorator
+     * @param RxFloDevImageUploader $imageUploader
+     */
     public function __construct(ImageManagerControllerDecorator $imageManagerControllerDecorator,
                                 RxFloDevImageUploader $imageUploader)
     {
@@ -25,21 +31,21 @@ class ImageManagerController extends Controller
 
     }
 
+    /**
+     * Starting point to process the uploaded images request
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function uploadImages(Request $request): JsonResponse
     {
-        Log::debug('Incoming Data To Upload');
         $imagesToUpload = $request->file('imagesToUpload');
 
-
-        Log::debug('REquest Images ');
-
         $imagesInfo = [];
-        $wrongExtensionImages = [];
+        $wrongExtensionImages = false;
 
         foreach ($imagesToUpload as $uploadedImage) {
-            Log::debug('Image To process ');
-            Log::debug($uploadedImage->getClientOriginalName());
-
             if ($uploadedImage->getClientOriginalExtension() == 'png') {
                 Log::debug('Image has correct extension ');
                 $imagesInfo[] = [
@@ -48,23 +54,23 @@ class ImageManagerController extends Controller
                     'imagePath' => $uploadedImage->getRealPath(),
                 ];
             } else {
-                Log::debug('Image has incorrect extension ');
-                $wrongExtensionImages[] = [
-                    'imageName' => $uploadedImage->getClientOriginalName(),
-                    'imageExtension' => $uploadedImage->getClientOriginalExtension(),
-                ];
+                $wrongExtensionImages = true;
+                break;
             }
         }
 
-        if (empty($wrongExtensionImages)) {
-            Log::debug('Going to upload Images to remote server ');
+        if ($wrongExtensionImages === false) {
+
             $uploadedImages = $this->imageUploaderHandler->uploadImages($imagesInfo);
-            Log::debug('Uploaded Images');
-            Log::debug(print_r($uploadedImages, true));
-            return response()->json($this->responseDecorator->decorateUploadImagesResponse($uploadedImages));
+            if(!empty($uploadedImages)) {
+                return response()->json($this->responseDecorator->decorateUploadImagesResponse($uploadedImages));
+            }
+
+            return response()->json($this->responseDecorator->decorateErrorFileUploadResponse());
+
         }
 
-        return response()->json($this->responseDecorator->decorateNoPngUploadImagesResponse($wrongExtensionImages));
+        return response()->json($this->responseDecorator->decorateNoPngUploadImagesResponse());
 
     }
 }

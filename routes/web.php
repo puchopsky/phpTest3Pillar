@@ -21,7 +21,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::get('/image-hanlder', function () {
+Route::get('/image-handler', function () {
     return view('imageManager');
 });
 

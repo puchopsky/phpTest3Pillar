@@ -3,7 +3,6 @@
 namespace App\Validation;
 
 use App\Validation\Rules\ValidationRulesConstants;
-use Illuminate\Support\Facades\Log;
 
 class RuleValidationSelector
 {
@@ -19,11 +18,15 @@ class RuleValidationSelector
     public function getRules(string $rulesToValidate = 'new', string $from = 'login'): array
     {
         $rules = $this->getConstantRules($from);
-        Log::debug('Rules found');
-        Log::debug(json_encode($rules[$rulesToValidate]));
         return $rules[$rulesToValidate];
     }
 
+    /**
+     * To get the rules based on the incoming from parameter
+     *
+     * @param string $from
+     * @return array
+     */
     protected function getConstantRules(string $from) : array
     {
         $constant = [];

@@ -3,12 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Classes\MiddleWareValidator;
-use Closure;
-use Illuminate\Http\Request;
 use App\Validation\RuleValidationSelector;
-use Illuminate\Support\Facades\Log;
 use App\ResponseDecorators\LoginControllerDecorator;
-use JetBrains\PhpStorm\Pure;
 
 class LoginParamsMiddlewareValidator extends MiddleWareValidator
 {

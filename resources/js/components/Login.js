@@ -32,7 +32,7 @@ class Login extends React.Component {
 
         if (this.userAuthHandler.userLoggedIn === true) {
             console.log("User Logged correctly going for allowed images");
-            window.location.href = "http://localhost/image-hanlder";
+            window.location.href = "http://localhost/image-handler";
         }
     };
 

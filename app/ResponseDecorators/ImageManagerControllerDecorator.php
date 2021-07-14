@@ -26,26 +26,15 @@ class ImageManagerControllerDecorator extends GenericResponsesDecorator
     }
 
     /**
-     * @param array $imagesInfo
      * @return array
      */
-    public function decorateNoPngUploadImagesResponse(array $failedImages = []): array
+    public function decorateNoPngUploadImagesResponse(): array
     {
-        $responseArray = [
+        return [
             'success' => false,
             'error' => 'Images with wrong extension ',
             'failedImages' => [],
         ];
-
-        foreach ($failedImages as $failedImage) {
-            $failedImageObject = json_decode(json_encode($failedImage), false);
-            $responseArray['failedImages'][] = [
-                'imageName' => $failedImageObject->imageName,
-                'imageExtension' => $failedImageObject->imageExtension,
-            ];
-        }
-
-        return $responseArray;
     }
 
 }

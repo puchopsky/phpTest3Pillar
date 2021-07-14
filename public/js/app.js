@@ -5134,7 +5134,7 @@ var Login = /*#__PURE__*/function (_React$Component) {
               case 5:
                 if (_this.userAuthHandler.userLoggedIn === true) {
                   console.log("User Logged correctly going for allowed images");
-                  window.location.href = "http://localhost/image-hanlder";
+                  window.location.href = "http://localhost/image-handler";
                 }
 
               case 6:

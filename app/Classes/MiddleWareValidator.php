@@ -7,7 +7,6 @@ use App\Validation\RuleValidationSelector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Closure;
-use Illuminate\Support\Facades\Log;
 use \Illuminate\Contracts\Validation\Validator as ValidatorObject;
 
 class MiddleWareValidator
@@ -56,15 +55,12 @@ class MiddleWareValidator
      */
     public function handle(Request $request, Closure $next): mixed {
         $this->request = $request;
-        Log::debug('____________MIDDLE WARE INCOMING Values');
-        Log::info(json_encode($request->all()));
-        Log::debug('Reqquest Method ' . $request->method());
+
         $this->verifyHttpRequestVerb();
         if ($this->isAllowedToProceed) {
             $this->validateIncomingRequestValues();
 
             if ($this->ruleValidationSelector->fails()) {
-                Log::debug('We have Validation Error ' . $this->ruleValidationSelector->messages()->first());
                 return response()->json($this->generateDecoratedResponse());
             }
         }
@@ -72,6 +68,9 @@ class MiddleWareValidator
         return $next($request);
     }
 
+    /**
+     * To indicate which rule operation to use based on the request method
+     */
     public function verifyHttpRequestVerb()
     {
         switch ($this->request->method()) {
@@ -90,9 +89,11 @@ class MiddleWareValidator
         }
     }
 
+    /**
+     * To retrieve the correct rules based on the operation and validate the incoming parameters against those rules
+     */
     public function validateIncomingRequestValues()
     {
-        Log::debug("_____________ OPERTION TO VALIDATE {$this->operationToValidate}");
         $foundRules = $this->ruleValidationSelector->getRules($this->operationToValidate, $this->comesFrom);
         $this->ruleValidationSelector = Validator::make(
             $this->request->all(),

@@ -15,7 +15,7 @@ class GenericResponsesDecorator implements ResponseDecoratorInterface
 
     public function decorateErrorFileUploadResponse(): array
     {
-        return ['success' => false, 'error' => 'Fail to upload the file'];
+        return ['success' => false, 'error' => 'Fail to upload to server'];
     }
 
     public function decorateSuccessfulFileUpload(): array

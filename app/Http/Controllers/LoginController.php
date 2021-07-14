@@ -7,7 +7,6 @@ use App\ResponseDecorators\LoginControllerDecorator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class AuthController
@@ -24,6 +23,7 @@ class LoginController extends Controller
     /**
      * AuthController constructor.
      * @param LoginControllerDecorator $responseDecorator
+     * @param UserRePository $userRepository
      */
     public function __construct(LoginControllerDecorator $responseDecorator, UserRePository $userRepository)
     {
@@ -32,6 +32,8 @@ class LoginController extends Controller
     }
 
     /**
+     * To verify the user credentials and return a JWT token to use on the rest of the API
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -43,21 +45,10 @@ class LoginController extends Controller
             'password' => $request->get('password'),
         ];
 
-        Log::debug('____________LOGIN INCOMMING VALUES ');
-        Log::debug(json_encode($incommingData));
-
         if (Auth::attempt($incommingData)) {
             $user = Auth::user();
 
-            Log::debug('____________User is allowed ');
-            Log::debug(json_encode($user));
-
-            Log::debug('____________Request ');
-
             $token = $request->user()->createToken('apiToken')->plainTextToken;
-
-            Log::debug('____________Generated Token  ');
-            Log::debug(json_encode($token));
 
             return response()->json($this->responseDecorator->decorateLoggedInUserResponse($user, $token));
 
@@ -67,27 +58,25 @@ class LoginController extends Controller
     }
 
     /**
+     * To remove the JWT tokens
+     *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function logoutUser(Request $request)
+    public function logoutUser(Request $request): JsonResponse
     {
-        Log::debug('User Log Out Request  ');
         $request->user()->currentAccessToken()->delete();
         return response()->json($this->responseDecorator->decorateLogOutResponse());
     }
 
     /**
+     * To fetch the user info based on the JWT token
+     *
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getUserInfo(Request $request)
+    public function getUserInfo(Request $request): JsonResponse
     {
-        $incomingUser = $request->user();
-
-        Log::debug('User Info is  ');
-        Log::debug(json_encode($incomingUser));
-
-        return response()->json($this->responseDecorator->decorateGetUserInfoResponse($incomingUser));
+        return response()->json($this->responseDecorator->decorateGetUserInfoResponse($request->user()));
     }
 }
