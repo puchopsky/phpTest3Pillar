@@ -43,6 +43,7 @@ class UserAuthHandler extends AxiosHelper {
                 "There was an error while login the user ",
                 error.message
             );
+            this.userLoggedIn = false;
             return false;
         }
     };

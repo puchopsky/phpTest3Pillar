@@ -7,11 +7,17 @@ import {
     Form,
     InputGroup,
     FormControl,
+    Alert,
 } from "react-bootstrap";
 import UserAuthHandler from "../../classes/UserAuthHandler";
 
 class Login extends React.Component {
     userAuthHandler = new UserAuthHandler();
+
+    state = {
+        showLoginError: false,
+        showErrorMessage: false,
+    };
 
     handleChange = (event) => {
         this.setState({
@@ -31,6 +37,19 @@ class Login extends React.Component {
 
         if (this.userAuthHandler.userLoggedIn === true) {
             window.location.href = "http://localhost/image-handler";
+        } else {
+            this.setState({ showLoginError: true, showErrorMessage: true });
+        }
+    };
+
+    renderLoginError = () => {
+        if (this.state.showErrorMessage) {
+            setTimeout(() => {
+                this.setState({ showErrorMessage: false });
+            }, 4000);
+            return (
+                <Alert variant="danger">Email or password is incorrect!</Alert>
+            );
         }
     };
 
@@ -79,6 +98,9 @@ class Login extends React.Component {
                             </Button>
                         </Form>
                     </Col>
+                </Row>
+                <Row className="pt-3">
+                    <Col>{this.renderLoginError()}</Col>
                 </Row>
             </Container>
         );
